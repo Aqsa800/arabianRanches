@@ -172,13 +172,6 @@ class AppServiceProvider extends ServiceProvider
 
         ]);
 
-        if (Schema::hasTable('services')) {
-            if(Service::active()->exists()){
-               $serviceFoot =  Service::mainService()->active()->take(7)->get();
-                View::share('serviceFoot', $serviceFoot);
-
-            }
-        }
         if (Schema::hasTable('page_tags')) {
             if(PageTag::where('page_name',Route::currentRouteName())->exists()){
                $pagemeta =  PageTag::where('page_name',Route::currentRouteName())->first();
@@ -186,8 +179,5 @@ class AppServiceProvider extends ServiceProvider
 
             }
         }
-        View::share('serviceFoot', $serviceFoot);
-        View::share('pagemeta', $pagemeta);
-
     }
 }

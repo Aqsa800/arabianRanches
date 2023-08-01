@@ -17,6 +17,7 @@ class CategorySeeder extends Seeder
         Category::insert([
             ['name' => 'Rent', 'status' => config('constants.active'), 'user_id'=> 1],
             ['name' => 'Resale', 'status' => config('constants.active'), 'user_id'=> 1],
+            ['name' => 'OffPlan', 'status' => config('constants.active'), 'user_id'=> 1],
         ]);
     }
 }

@@ -13,9 +13,9 @@ class TestimonialController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:'.config('constants.Permissions.testimonials'),
-        ['only' => ['index','create', 'edit', 'update', 'destroy']
-        ]);
+        // $this->middleware('permission:'.config('constants.Permissions.testimonials'),
+        // ['only' => ['index','create', 'edit', 'update', 'destroy']
+        // ]);
     }
     /**
      * Display a listing of the resource.
@@ -38,8 +38,7 @@ class TestimonialController extends Controller
      */
     public function create()
     {
-        $agents = Agent::active()->latest()->get();
-        return view('dashboard.testimonials.create', compact('agents'));
+        return view('dashboard.testimonials.create');
     }
 
     /**

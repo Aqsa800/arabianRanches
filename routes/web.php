@@ -35,58 +35,16 @@ Route::get('cronjob/property/addxmlSubImg', 'App\Http\Controllers\CronController
  *******************/
 
 Route::namespace('App\Http\Controllers\Frontend')->group(function(){
-    
+
     Route::any('/', 'HomeController@home')->name('home');
-    Route::any('about-us', 'HomeController@aboutUs')->name('about-us');
-    Route::any('agents', 'HomeController@agents')->name('agents');
-    Route::any('services', 'HomeController@services')->name('services');
+    Route::any('/arabianRanches_1', 'HomeController@arabianRanches1')->name('arabianRanches_1');
+    Route::any('/arabianRanches_11', 'HomeController@arabianRanches2')->name('arabianRanches_2');
+    Route::any('/arabianRanches_111', 'HomeController@arabianRanches3')->name('arabianRanches_3');
     Route::any('properties', 'HomeController@properties')->name('properties');
-    Route::any('rent', 'HomeController@rent')->name('rent');
-    Route::any('resale', 'HomeController@resale')->name('resale');
-    Route::any('dubai-offplans', 'HomeController@projects')->name('dubai-offplans');
-    Route::any('communities', 'HomeController@communities')->name('communities');
-    Route::any('developers', 'HomeController@developers')->name('developers');
-    Route::any('media/{type?}', 'HomeController@media')->name('media');
-    Route::any('awards/{developer?}', 'HomeController@awards')->name('awards');
-    Route::any('careers', 'HomeController@careers')->name('careers');
-    Route::any('floorplans', 'HomeController@floorplans1')->name('floorplans');
-    Route::any('floorplans1', 'HomeController@floorplans1')->name('floorplans1');
     Route::any('contact-us', 'HomeController@contact')->name('contact-us');
-    Route::any('dubai-offplan/{slug}', 'HomeController@singleProject')->name('dubai-offplan');
-    Route::any('property/{slug}', 'HomeController@singleProperty')->name('property');
-    Route::any('community/{slug}', 'HomeController@singleCommunity')->name('community');
-    Route::any('developer/{slug}', 'HomeController@singleDeveloper')->name('developer');
-    Route::any('agent/{slug}', 'HomeController@singleAgent')->name('agent');
-    Route::any('service/{slug}', 'HomeController@singleService')->name('service');
-    Route::any('news/{slug}', 'HomeController@singleNews')->name('news');
-    Route::any('blog/{slug}', 'HomeController@singleBlog')->name('blog');
-    Route::any('career/{slug}', 'HomeController@singleCareer')->name('career');
-    Route::any('floorplan/{slug}', 'HomeController@singleFloorplan')->name('floorplan');
-    Route::any('privacy-policy', 'HomeController@privacyPolicy')->name('privacy-policy');
-    Route::any('terms-conditions', 'HomeController@termsConditions')->name('terms-conditions');
-    Route::any('faqs', 'HomeController@faqs')->name('faqs');
-    Route::any('buyers-guide', 'HomeController@buyersGuide')->name('buyers-guide');
-    Route::any('sellers-guide', 'HomeController@sellersGuide')->name('sellers-guide');
-    Route::any('invest-in-dubai', 'HomeController@investDubai')->name('invest-in-dubai');
-    Route::any('about-dubai', 'HomeController@aboutDubai')->name('about-dubai');
-    Route::any('facts-figures', 'HomeController@factsFigures')->name('facts-figures');
-    Route::any('relocating-to-dubai', 'HomeController@relocatingToDubai')->name('relocating-to-dubai');
-    Route::any('sell-your-property', 'HomeController@sellYourProperty')->name('sell-your-property');
-    Route::any('lease-your-property', 'HomeController@leaseYourProperty')->name('lease-your-property');
-    Route::any('rent-property', 'HomeController@rentProperty')->name('rent-property');
-    Route::any('property-valuation', 'HomeController@propertyValuation')->name('property-valuation');
-    Route::any('luxury-homes', 'HomeController@luxuryHomes')->name('luxury-homes');
-    Route::any('commercial-real-estate', 'HomeController@commercialRealestate')->name('commercial-real-estate');
-    Route::any('demo', 'HomeController@demo')->name('demo');
-    Route::any('thank-you', 'HomeController@thankYou')->name('thank-you');
-    Route::any('bookViewing', 'ContactController@bookViewing')->name('bookViewing');
     Route::any('enquireForm', 'ContactController@enquireForm')->name('enquireForm');
     Route::any('subscribeForm', 'ContactController@subscribeForm')->name('subscribeForm');
     Route::any('contactForm', 'ContactController@contactForm')->name('contactForm');
-    Route::any('careerForm', 'ContactController@careerForm')->name('careerForm');
-    Route::any('floorPlanForm', 'ContactController@floorPlanForm')->name('floorPlanForm');
-    Route::any('valuationForm', 'ContactController@valuationForm')->name('valuationForm');
-
 });
 
 

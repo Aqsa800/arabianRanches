@@ -1,0 +1,114 @@
+@media (max-width:1200px){
+
+}
+@media (max-width:992px){
+	.navBarArea .nav-item .nav-link{
+padding: 12px 12px;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
+	color: #fff;
+}
+.navBarArea{
+flex-direction: column;
+gap: 15px;
+padding: 0px 0px;
+background-color: #1e293f;
+position: absolute;
+    top: 54px;
+    left: 0;
+    z-index: 9999;
+}
+.mainNavBar .container-fluid{
+position: relative;
+}
+.navBarArea .nav-item .nav-link:hover{
+	background-color: #fff;
+	color: #1e293f;
+}
+}
+
+@media (max-width:768px){
+.ftList{
+	margin-bottom: 24px;
+}
+.positionBtmC{
+position: relative;
+margin-bottom: 110px;
+min-width: 240px;
+}
+.videoLink {
+bottom: -60px;
+right: 50%;
+width: 182px;
+transform: translateX(50%);
+}
+.headerContentBox{
+	width: 300px;
+margin: 0 auto;
+padding: 20px 30px 0px 20px;
+}
+.headerContentBox h2{
+	font-size: 33px;
+}
+.mainNavBar{
+	margin-bottom: 30px;
+}
+.headerContentBox p{
+	font-size: 14px;
+}
+.secMxHt{
+	height: auto;
+}
+.framebox{
+	top: 0px;
+}
+.featureCardContent h5{
+	color: #fff;
+}
+.featureCardContent p{
+	color: #fff;
+}
+.sectionDark.secMxHt{
+padding: 20px 0px 40px;
+margin-bottom: 40px;
+}
+.pd-r-50{
+	padding-right: 0px;
+}
+.pd-l-50{
+	padding-left: 0px;
+	padding-top: 20px;
+}
+.testiSliderCOntent{
+	padding-right: 0px;
+	margin-bottom: 40px;
+}
+.testiSliderImgBox img{
+	margin-left: unset;
+	margin: 0 auto;
+}
+.NewsBox{
+    flex-direction: column;
+    text-align: center;	
+}
+.NewsBox .newsContent{
+margin-bottom: 20px;
+}
+.ftLogo img{
+    margin: 0 auto;
+    display: block;
+}
+.ftLogo {
+    margin-bottom: 40px;
+}
+.ftHoriList{
+	justify-content: center;
+}
+.ftText{
+font-size: 12px;
+    text-align: center;
+    margin-bottom: 6px;	
+}
+
+}

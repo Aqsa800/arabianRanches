@@ -33,12 +33,10 @@ class HomeController extends Controller
         $activeUserCount = User::active()->where('role','!=', config('constants.super_admin'))->count();
         $activePropertyCount = Property::active()->count();
         $activeTestimonialCount = Testimonial::active()->count();
-        $activeBlogCount = Article::active()->count();
 
         return view('dashboard.dashboard', compact([
             'activeUserCount',
             'activePropertyCount',
-            'activeBlogCount',
             'activeTestimonialCount'
         ]));
     }

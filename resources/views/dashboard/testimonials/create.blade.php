@@ -31,7 +31,7 @@
                         <form class="form-boder" id="storeForm" files="true" method="POST" enctype="multipart/form-data"
                             action="{{ route('dashboard.testimonials.store') }}">
                             @csrf
-                            
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -62,7 +62,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="status">Status</label>
                                             <select class="form-control select1 @error('status') is-invalid @enderror" id="status"
@@ -78,23 +78,8 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="agent_id">Agent Name</label>
-                                            <select data-placeholder="Select Agent" style="width: 100%;" class=" form-control select1 @error('agent_id') is-invalid @enderror" id="agent_id" name="agent_id" required>
 
-                                                @foreach ($agents as $agent)
-                                                <option value="{{ $agent->id }}">{{ $agent->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('agent_id')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="rating">Rating</label>
                                             <select data-placeholder="Select Rating" style="width: 100%;" class=" form-control select1 @error('rating') is-invalid @enderror" id="rating" name="rating" required>
@@ -110,19 +95,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="name">Testimonial Title</label>
-                                            <input type="text" value="{{ old('feedback_title') }}"
-                                                class="form-control @error('feedback_title') is-invalid @enderror" id="feedback_title"
-                                                placeholder="Enter Client Name" name="feedback_title" required>
-                                            @error('feedback_title')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
+
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="feedback">Feedback</label>

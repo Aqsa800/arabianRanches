@@ -14,11 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(PermissionSeeder::class);
         $this->call(AdminSettingSeeder::class);
         $this->call(WebsiteSettingSeeder::class);
         $this->call(CategorySeeder::class);
-        $this->call(TagSeeder::class);
-        $this->call(LanguageSeeder::class);
     }
 }

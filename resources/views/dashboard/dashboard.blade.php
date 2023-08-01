@@ -26,7 +26,7 @@
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-            @can(config('constants.Permissions.user_management'))
+
             <div class="col-lg-3 col-6">
                 <!-- small box -->
                 <div class="small-box bg-info">
@@ -41,8 +41,7 @@
                     <a href="{{ url('dashboard/users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            @endcan
-            @can(config('constants.Permissions.real_estate'))
+
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
@@ -58,24 +57,7 @@
                     <a href="{{ url('dashboard/properties') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            @endcan
-            @can(config('constants.Permissions.content_management'))
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{ $activeBlogCount }}</h3>
-                        <p>Active Articles</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-file"></i>
-                    </div>
-                    <a href="{{ url('dashboard/articles') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            @endcan
-            @can(config('constants.Permissions.testimonials'))
+            
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
@@ -91,7 +73,7 @@
                     <a href="{{ url('dashboard/testimonials') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            @endcan
+
             <!-- ./col -->
         </div>
         <!-- /.row -->

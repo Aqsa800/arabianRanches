@@ -21,8 +21,6 @@ return new class extends Migration
                 $table->longText('feedback');
                 $table->string('status')->default('active');
                 $table->string('rating')->nullable();
-                $table->unsignedBigInteger('agent_id')->nullable();
-                $table->foreign('agent_id')->references('id')->on('agents');
                 $table->unsignedBigInteger('user_id');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                 $table->softDeletes();
