@@ -66,7 +66,7 @@
                                         <div class="form-group">
                                             <label for="logo">Image/Icon<small class="text-danger">(Prefer Size 60x30)</small></label>
                                             <div class="custom-file   @error('image') is-invalid @enderror">
-                                                <input type="file" class="custom-file-input" id="image" name="image" accept="image/*" required>
+                                                <input type="file" class="custom-file-input" id="image" name="image" accept="image/*">
                                                 <label class="custom-file-label" for="image">Choose file</label>
                                             </div>
                                             @error('image')

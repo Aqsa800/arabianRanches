@@ -16,9 +16,9 @@ return new class extends Migration
         if (!Schema::hasTable('leads')) {
             Schema::create('leads', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
+                $table->string('name')->nullable();
                 $table->string('email');
-                $table->string('phone');
+                $table->string('phone')->nullable();
                 $table->string('form_name')->nullable();
                 $table->longText('detail')->nullable();
                 $table->longText('message')->nullable();

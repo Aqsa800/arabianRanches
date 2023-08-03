@@ -12,9 +12,7 @@ class LeadController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:'.config('constants.Permissions.leads'),
-        ['only' => ['index','create', 'edit', 'update', 'destroy']
-        ]);
+       
     }
     /**
      * Display a listing of the resource.

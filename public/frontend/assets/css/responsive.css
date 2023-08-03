@@ -26,6 +26,26 @@ position: relative;
 	background-color: #fff;
 	color: #1e293f;
 }
+.headFormArea{
+padding: 24px 30px;
+max-width: 300px;
+}
+.headFormArea .formRow{
+	flex-direction: column;
+}
+.columBox.maxWd{
+	max-width: 100%;
+}
+.mainNavBar{
+	margin-bottom: 30px;
+}
+.tabHtAuto{
+	height: auto;
+	padding-bottom: 40px;
+}
+.headFrmBtn{
+	margin: 0 auto;
+}
 }
 
 @media (max-width:768px){
@@ -49,6 +69,7 @@ margin: 0 auto;
 padding: 20px 30px 0px 20px;
 }
 .headerContentBox h2{
+    white-space: normal;
 	font-size: 33px;
 }
 .mainNavBar{
@@ -90,7 +111,7 @@ margin-bottom: 40px;
 }
 .NewsBox{
     flex-direction: column;
-    text-align: center;	
+    text-align: center;
 }
 .NewsBox .newsContent{
 margin-bottom: 20px;
@@ -107,8 +128,25 @@ margin-bottom: 20px;
 }
 .ftText{
 font-size: 12px;
-    text-align: center;
-    margin-bottom: 6px;	
+text-align: center;
+margin-bottom: 6px;
 }
-
+.formContentBox{
+margin-bottom: 40px;
+}
+.secContentBox .pText.smText{
+ padding: 0px 20px;
+}
+.formContentBox p{
+font-size: 22px;
+}
+.formContentBox h3{
+ font-size: 20px;
+}
+.formContentBox span{
+font-size: 18px;
+}
+.formCard .formArea{
+	    padding: 30px 30px 30px;
+}
 }

@@ -10,10 +10,7 @@ class WebsiteSettingController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:'.config('constants.Permissions.testimonials'),
-        ['only' => ['getSmsBulk','updateSmsBulk', 'getRecaptchaSiteKey', 'updateRecaptchaSiteKey', 'getSocialInfo',
-        'updateSocialInfo','getBasicInfo','updateBasicInfo', 'update']
-        ]);
+
     }
     public function getSmsBulk()
     {

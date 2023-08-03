@@ -41,10 +41,12 @@ Route::namespace('App\Http\Controllers\Frontend')->group(function(){
     Route::any('/arabianRanches_11', 'HomeController@arabianRanches2')->name('arabianRanches_2');
     Route::any('/arabianRanches_111', 'HomeController@arabianRanches3')->name('arabianRanches_3');
     Route::any('properties', 'HomeController@properties')->name('properties');
+    Route::any('property/{slug}', 'HomeController@singleProperty')->name('singleProperty');
     Route::any('contact-us', 'HomeController@contact')->name('contact-us');
     Route::any('enquireForm', 'ContactController@enquireForm')->name('enquireForm');
     Route::any('subscribeForm', 'ContactController@subscribeForm')->name('subscribeForm');
     Route::any('contactForm', 'ContactController@contactForm')->name('contactForm');
+    Route::any('reachoutForm', 'ContactController@contactForm')->name('reachoutForm');
 });
 
 
@@ -236,6 +238,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Dashboard', 'prefix' => 'dash
     Route::resource('page-tags', PageTagController::class, ['as' => 'dashboard']);
 });
 
-Route::namespace('App\Http\Controllers\Frontend')->group(function(){
-    Route::get('{slug}', 'HomeController@dynamicPage')->name('dynamicPage');
-});
+// Route::namespace('App\Http\Controllers\Frontend')->group(function(){
+//     Route::get('{slug}', 'HomeController@dynamicPage')->name('dynamicPage');
+// });

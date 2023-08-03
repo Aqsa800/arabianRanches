@@ -44,189 +44,135 @@
 
 
 
-                    <li class="nav-item {{ activeParentNavBar('realEstate', 'menu-open') }}">
-                        <a href="#" class="nav-link {{ activeParentNavBar('realEstate', 'active') }}">
-                            <i class="nav-icon fa fa-building"></i>
-                            <p>
-                                Real Estate
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
+                <li class="nav-item {{ activeParentNavBar('realEstate', 'menu-open') }}">
+                    <a href="#" class="nav-link {{ activeParentNavBar('realEstate', 'active') }}">
+                        <i class="nav-icon fa fa-building"></i>
+                        <p>
+                            Real Estate
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
 
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/projects') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.projects') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Off-Plan</p>
-                                    </a>
-                                </li>
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/properties') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.properties') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Properties</p>
+                            </a>
+                        </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/properties') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.properties') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>XML Listings</p>
-                                    </a>
-                                </li>
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/accommodations') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.accommodations') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Accommodations</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/amenities') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.amenities') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Amenities</p>
+                            </a>
+                        </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/floorPlans') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.floorPlans') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Floor Plans</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/accommodations') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.accommodations') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Accommodations</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/amenities') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.amenities') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Amenities</p>
-                                    </a>
-                                </li>
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/offer-types') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.offer-types') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Offer Types</p>
+                            </a>
+                        </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/offer-types') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.offer-types') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Offer Types</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/developers') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.developers') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Developers</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/completion-statuses') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.completion-statuses') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Completion Status</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/agents') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.agents') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Agents</p>
-                                    </a>
-                                </li>
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/communities') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.communities') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Communities</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/categories') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.categories') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Categories</p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/communities') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.communities') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Communities</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('dashboard/subCommunities') }}"
-                                        class="nav-link {{ activeChildNavBar('dashboard.subCommunities') }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Sub Communities</p>
-                                    </a>
-                                </li>
-
-                        </ul>
-                    </li>
+                <li class="nav-item {{ activeParentNavBar('leadManagement', 'menu-open') }}">
+                    <a class="nav-link  {{ activeParentNavBar('leadManagement', 'active') }}">
+                        <i class="nav-icon fa fa-bullhorn"></i>
+                        <p>
+                            Lead Management
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/leads') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.leads') }} ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Lead List</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
 
 
-                    <li class="nav-item {{ activeParentNavBar('leadManagement', 'menu-open') }}">
-                        <a class="nav-link  {{ activeParentNavBar('leadManagement', 'active') }}">
-                            <i class="nav-icon fa fa-bullhorn"></i>
-                            <p>
-                                Lead Management
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ url('dashboard/leads') }}"
-                                    class="nav-link {{ activeChildNavBar('dashboard.leads') }} ">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Lead List</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ url('dashboard/testimonials') }}"
+                        class="nav-link {{ activeChildNavBar('dashboard.testimonials') }}">
+                        <i class="nav-icon fa fa-quote-left"></i>
+                        <p>Testimonials</p>
+                    </a>
+                </li>
 
 
 
-                    <li class="nav-item">
-                        <a href="{{ url('dashboard/testimonials') }}"
-                            class="nav-link {{ activeChildNavBar('dashboard.testimonials') }}">
-                            <i class="nav-icon fa fa-quote-left"></i>
-                            <p>Testimonials</p>
-                        </a>
-                    </li>
+                <li class="nav-item {{ activeParentNavBar('SEO', 'menu-open') }}">
+                    <a href="#" class="nav-link {{ activeParentNavBar('SEO', 'active') }}">
+                        <i class="nav-icon fas fa-search-plus"></i>
+                        <p>
+                            SEO
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/page-tags') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.page-tags') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Page Tags</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
 
 
-                    <li class="nav-item {{ activeParentNavBar('SEO', 'menu-open') }}">
-                        <a href="#" class="nav-link {{ activeParentNavBar('SEO', 'active') }}">
-                            <i class="nav-icon fas fa-search-plus"></i>
-                            <p>
-                                SEO
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ url('dashboard/page-tags') }}"
-                                    class="nav-link {{ activeChildNavBar('dashboard.page-tags') }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Page Tags</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                <li class="nav-item {{ activeParentNavBar('websiteSettings', 'menu-open') }}">
+                    <a href="#" class="nav-link {{ activeParentNavBar('websiteSettings', 'active') }}">
+                        <i class="nav-icon fa fa-cogs"></i>
+                        <p>
+                            Website Settings
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/social-info') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.social-info') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Social Info</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard/basic-info') }}"
+                                class="nav-link {{ activeChildNavBar('dashboard.basic-info') }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Basic Info</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
-
-
-                    <li class="nav-item {{ activeParentNavBar('websiteSettings', 'menu-open') }}">
-                        <a href="#" class="nav-link {{ activeParentNavBar('websiteSettings', 'active') }}">
-                            <i class="nav-icon fa fa-cogs"></i>
-                            <p>
-                                Website Settings
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ url('dashboard/social-info') }}"
-                                    class="nav-link {{ activeChildNavBar('dashboard.social-info') }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Social Info</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ url('dashboard/basic-info') }}"
-                                    class="nav-link {{ activeChildNavBar('dashboard.basic-info') }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Basic Info</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                
 
                 <li class="nav-item">
                     <a href="{{ url('dashboard/profileSettings') }}"

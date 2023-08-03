@@ -12,8 +12,7 @@ class OfferTypeController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:'.config('constants.Permissions.real_estate'),
-        ['only' => ['index','create', 'edit', 'update', 'destroy', 'destroySubFloor']]);
+        
     }
     /**
      * Display a listing of the resource.

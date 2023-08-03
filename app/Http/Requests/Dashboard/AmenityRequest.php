@@ -29,7 +29,7 @@ class AmenityRequest extends FormRequest
                 {
                     return [
                         'name' => ['required',Rule::unique('amenities')->whereNull('deleted_at'), 'min:3','max:225'],
-                        'image' => ['required','image', 'max:2048'],
+                        'image' => ['image', 'max:2048'],
                         'status' => ['required', Rule::in(array_keys(config('constants.statuses')))]
                     ];
                 }

@@ -66,7 +66,7 @@
                                         <div class="form-group">
                                             <label for="logo">Logo</label>
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="logo" name="logo" accept=".png, .jpg, .jpeg">
+                                                <input type="file" class="custom-file-input" id="logo" name="logo" accept=".png, .jpg, .jpeg, .webp">
                                                 <label class="custom-file-label" for="logo">Choose file</label>
                                             </div>
                                         </div>
@@ -74,14 +74,14 @@
                                             @if(isset($logo))
                                             <img src="{{$logo}}" alt="" class="img-fluid" width="100" height="100" >
                                             @endif
-                                            
+
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="favicon">Favicon</label>
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="image" name="favicon" accept=".png, .jpg, .jpeg">
+                                                <input type="file" class="custom-file-input" id="image" name="favicon" accept=".png, .jpg, .jpeg, .webp">
                                                 <label class="custom-file-label" for="favicon">Choose file</label>
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@
                                             @if(isset($favicon))
                                             <img src="{{$favicon}}" alt="" class="img-fluid" width="30" height="30" >
                                             @endif
-                                            
+
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -104,23 +104,23 @@
                                             @if(isset($footer_logo))
                                             <img src="{{$footer_logo}}" alt="" class="img-fluid" width="100" height="100" >
                                             @endif
-                                            
+
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="copyright_description">Copyright Footer Text</label>
                                             <textarea name="copyright_description" class="form-control " id="copyright_description" rows="3">{{ $copyright_description }}</textarea>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="address">Address</label>
                                             <input type="text" value="{{ $address }}" id="address" name="address" class="form-control" placeholder="Enter Full Address">
                                         </div>
-                                        
+
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">

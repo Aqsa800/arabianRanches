@@ -29,18 +29,7 @@ class CommunityRequest extends FormRequest
                 {
                     return [
                         'name' =>['required','min:3','max:225'],
-                        'emirates'=>['required', Rule::in(config('constants.emirates'))],
                         'status' => ['required', Rule::in(array_keys(config('constants.statuses')))],
-                        'mainImage' => ['image', 'max:2048'],
-                        'imageGallery' => ['required','array'],
-                        'imageGallery.*' => ['image', 'max:2048'],
-                        'video'=>['mimes:mp4,mov,ogx,oga,ogv,ogg,webm'],
-                        'categoryIds'=>['array'],
-                        'categoryIds.*' => [Rule::exists('categories', 'id')],
-                        'tagIds'=>['array'],
-                        'tagIds.*' => [Rule::exists('tag_categories', 'id')],
-                        'developerIds'=>['array'],
-                        'developerIds.*' => [Rule::exists('developers', 'id')],
                     ];
                 }
             case 'PATCH':
@@ -48,18 +37,7 @@ class CommunityRequest extends FormRequest
                 {
                     return [
                         'name' =>['required','min:3','max:225'],
-                        'emirates'=>['required', Rule::in(config('constants.emirates'))],
                         'status' => ['required', Rule::in(array_keys(config('constants.statuses')))],
-                        'mainImage' => ['image','max:2048'],
-                        'imageGallery' => ['array'],
-                        'imageGallery.*' => ['image', 'max:2048'],
-                        'video'=>['mimes:mp4,mov,ogx,oga,ogv,ogg,webm'],
-                        'categoryIds'=>['array'],
-                        'categoryIds.*' => [Rule::exists('categories', 'id')],
-                        'tagIds'=>['array'],
-                        'tagIds.*' => [Rule::exists('tag_categories', 'id')],
-                        'developerIds'=>['array'],
-                        'developerIds.*' => [Rule::exists('developers', 'id')],
                     ];
                 }
             default: break;

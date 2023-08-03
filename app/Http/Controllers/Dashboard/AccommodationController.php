@@ -12,7 +12,7 @@ class AccommodationController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:'.config('constants.Permissions.real_estate'), ['only' => ['index','create', 'edit', 'update', 'destroy']]);
+        
     }
     /**
      * Display a listing of the resource.

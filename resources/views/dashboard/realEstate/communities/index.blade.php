@@ -63,16 +63,7 @@
                                                     action="{{ route('dashboard.communities.destroy', $community->id) }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a class="btn btn-dark btn-sm"
-                                                        href="{{ route('dashboard.communities.stats', $community->id) }}">
-                                                        <i class="fas fa-road"></i>
-                                                        Stats
-                                                    </a>
-                                                    <a class="btn btn-warning btn-sm"
-                                                        href="{{ route('dashboard.communities.show', $community->id) }}">
-                                                        <i class="fas fa-eye"></i>
-                                                        View
-                                                    </a>
+                                                    
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('dashboard.communities.edit', $community->id) }}">
                                                         <i class="fas fa-pencil-alt"></i>
