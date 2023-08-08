@@ -131,6 +131,11 @@ return [
             'root' => storage_path('app'),
             'throw' => false,
         ],
+        'pages' => [
+            'driver' => 'local',
+            'root' => storage_path('app/pages'),
+            'throw' => false,
+        ],
 
         'public' => [
             'driver' => 'local',

@@ -8,13 +8,18 @@
     @section('pageDescription', $website_description)
     @section('pageKeyword', $website_keyword)
 @endif
-@section('headerClass', 'headMdHt')
-@section('headerId', 'contactHeader')
+
 @section('header')
-    <div class="headerContent">
-        <h2 class="headerTitle mrT150">Talk To Our Team </h2>
-    </div>
+    <header class="header overlayClr headMdHt"  id="contactHeader">
+        <div class="container">
+            @include('frontend.layout.nav')
+            <div class="headerContent">
+                <h2 class="headerTitle mrT150">Talk To Our Team </h2>
+            </div>
+        </div>
+    </header>
 @endsection
+
 @section('header_extra')
 @endsection
 @section('content')

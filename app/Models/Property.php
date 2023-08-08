@@ -7,14 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Image\Manipulations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 use Carbon\Carbon;
 use App\Observers\PropertyObserver;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Property extends Model implements HasMedia
 {
@@ -76,14 +74,44 @@ class Property extends Model implements HasMedia
      * @var array
      */
     protected $appends = [
-        'qr',
         'mainImage',
         'subImages',
         'floorPlan',
         'brochure',
         'formattedCreatedAt'
     ];
-      /**
+    /**
+     * SET Attributes
+     */
+    /**
+     * GET Attributes
+     */
+    public function url_exists($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // follow redirects
+
+        // Set a maximum timeout of 10 seconds to prevent the script from hanging
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+        // Execute the request and get the HTTP status code
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        // Check the HTTP status code
+        if($httpCode >= 200 && $httpCode < 300) {
+            // The file exists and the server returned a successful HTTP status code
+            return true;
+        } else {
+            // The file does not exist or the server returned an error HTTP status code
+            return false;
+        }
+    }
+     /**
      * Get the options for generating the slug.
      */
     public function getSlugOptions() : SlugOptions
@@ -92,54 +120,21 @@ class Property extends Model implements HasMedia
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
-    /**
-     * SET Attributes
-     */
-    /**
-     * GET Attributes
-     */
-    public function getQrAttribute()
-    {
-        return $this->getFirstMediaUrl('qrs', 'resize_qr_images');
-    }
     public function getMainImageAttribute()
     {
-        if(url_exists($this->getFirstMediaUrl('mainImages', 'resize'))){
-            return $this->getFirstMediaUrl('mainImages', 'resize');
-        }else{
-            return asset('frontend/assets/images/no-image.webp');
-        }
-        
-        //return $this->getFirstMediaUrl('mainImages', 'resize');
+        return $this->getFirstMediaUrl('mainImages');
     }
     public function getSubImagesAttribute()
     {
         $subImages = array();
         foreach($this->getMedia('subImages') as $image){
-            if($image->hasGeneratedConversion('resize_images') && url_exists($image->getUrl('resize_images'))){
-                array_push($subImages, ['id'=> $image->id, 'path'=>$image->getUrl('resize_images')]);
-            }elseif(url_exists($image->getUrl('resize_images'))){
-                array_push($subImages, ['id'=> $image->id, 'path'=>$image->getUrl()]);
+
+            if($this->url_exists($image->getUrl())){
+                array_push($subImages, $image->getUrl());
             }
+
         }
        return $subImages;
-    }
-    public function registerMediaConversions(Media $media = null) : void
-    {
-        $this->addMediaConversion('resize')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('mainImages')
-            ->nonQueued();
-
-        $this->addMediaConversion('resize_images')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('subImages')
-            ->nonQueued();
-
-            $this->addMediaConversion('resize_qr_images')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('qrs')
-            ->nonQueued();
     }
     public function getFloorPlanAttribute()
     {
@@ -186,12 +181,19 @@ class Property extends Model implements HasMedia
     }
     public function accommodations()
     {
-        return $this->belongsTo(Accommodation::class, 'accommodation_id', 'id');
+        return $this->belongsToMany(Accommodation::class, 'property_accommodations', 'property_id', 'accommodation_id');
     }
-
+    public function specifications()
+    {
+        return $this->belongsToMany(Specification::class, 'property_specifications', 'property_id', 'specification_id');
+    }
     public function amenities()
     {
         return $this->belongsToMany(Amenity::class, 'property_amenities', 'property_id', 'amenity_id');
+    }
+    public function features()
+    {
+        return $this->belongsToMany(Feature::class, 'property_features', 'property_id', 'feature_id');
     }
 
     public function agent()
@@ -222,7 +224,7 @@ class Property extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

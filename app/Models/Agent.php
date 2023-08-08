@@ -7,18 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Image\Manipulations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 use Carbon\Carbon;
-
 
 class Agent extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia, HasRichText, HasSlug;
+    use HasFactory, SoftDeletes, InteractsWithMedia, HasRichText;
     /**
      * The attributes that are mass assignable.
      *
@@ -47,8 +42,7 @@ class Agent extends Model implements HasMedia
      */
     protected $appends = [
         'image',
-        'formattedCreatedAt',
-        'firstName'
+        'formattedCreatedAt'
     ];
     /**
      * The richtext attributes
@@ -59,15 +53,6 @@ class Agent extends Model implements HasMedia
         'message'
     ];
     /**
-     * Get the options for generating the slug.
-     */
-    public function getSlugOptions() : SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom('name')
-            ->saveSlugsTo('slug');
-    }
-    /**
      * SET Attributes
      */
     /**
@@ -75,29 +60,11 @@ class Agent extends Model implements HasMedia
      */
     public function getImageAttribute()
     {
-        // return $this->getFirstMediaUrl('images', 'resize');
-
-        if($this->getFirstMediaUrl('images', 'resize')){
-            return $this->getFirstMediaUrl('images', 'resize');
-        }else{
-            return asset('frontend/assets/images/no-user.webp');
-        }
-    }
-    public function getFirstNameAttribute($value)
-    {
-        return strtok($this->name, " ");
+        return $this->getFirstMediaUrl('images');
     }
     public function getFormattedCreatedAtAttribute($value)
     {
         return Carbon::parse($this->created_at)->format('d m Y');
-    }
-    public function registerMediaConversions(Media $media = null) : void
-    {
-        $this->addMediaConversion('resize')
-            ->height(300)
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('images')
-            ->nonQueued();
     }
     /**
      * FIND Relationship
@@ -106,43 +73,7 @@ class Agent extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
-    public function languages()
-    {
-        return $this->belongsToMany(Language::class, 'agent_languages', 'agent_id', 'language_id');
-    }
-    public function projects()
-    {
-        return $this->belongsToMany(Project::class, 'agent_projects', 'agent_id', 'project_id');
-    }
-    public function developers()
-    {
-        return $this->belongsToMany(Developer::class, 'agent_developers', 'agent_id', 'developer_id');
-    }
-    public function communities()
-    {
-        return $this->belongsToMany(Community::class, 'agent_communities', 'agent_id', 'community_id');
-    }
-    public function services()
-    {
-        return $this->belongsToMany(Service::class, 'agent_services', 'agent_id', 'service_id');
-    }
-    public function testimonals()
-    {
-        return $this->hasMany(Testimonal::class);
-    }
-    public function properties()
-    {
-        return $this->hasMany(Property::class);
-    }
-    public function saleProperties()
-    {
-        return $this->properties()->where('category_id',config('constants.categories')["Sale"]);
-    }
-    public function resaleProperties()
-    {
-        return $this->properties()->where('category_id',config('constants.categories')["Resale"]);
-    }
-
+    
     /**
     * FIND local scope
     */
@@ -152,7 +83,7 @@ class Agent extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

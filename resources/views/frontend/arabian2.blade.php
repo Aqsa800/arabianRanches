@@ -8,31 +8,34 @@
     @section('pageDescription', $website_description)
     @section('pageKeyword', $website_keyword)
 @endif
-@section('headerClass', '')
-@section('headerId', 'arabianRanches2Header')
 @section('header')
-    <div class="headerContent">
-        <h2 class="headerTitle text-uppercase">Arabian Ranches II</h2>
-        <a href="#" class="fillBtn minWdLg  centerAuto mb-5">DOWNLOAD BROCHURE</a>
-        <div class="counterRow d-flex justify-center">
-            <div class="countBox">
-                <h5 class="countTitle">1,902</h5>
-                <p class="CountText">Homes</p>
-            </div>
-            <div class="countBox">
-                <h5 class="countTitle">91</h5>
-                <p class="CountText">Nationalities</p>
-            </div>
-            <div class="countBox">
-                <h5 class="countTitle">6,000</h5>
-                <p class="CountText">Residents</p>
-            </div>
-            <div class="countBox">
-                <h5 class="countTitle">6,200.000</h5>
-                <p class="CountText">Sq.Ft. Total Area</p>
+    <header class="header overlayClr"  id="arabianRanches2Header">
+        <div class="container">
+            @include('frontend.layout.nav')
+            <div class="headerContent">
+                <h2 class="headerTitle text-uppercase">Arabian Ranches II</h2>
+                <a href="#" class="fillBtn minWdLg  centerAuto mb-5">DOWNLOAD BROCHURE</a>
+                <div class="counterRow d-flex justify-center">
+                    <div class="countBox">
+                            <h5 class="countTitle">1,902</h5>
+                            <p class="CountText">Homes</p>
+                    </div>
+                    <div class="countBox">
+                            <h5 class="countTitle">91</h5>
+                            <p class="CountText">Nationalities</p>
+                    </div>
+                    <div class="countBox">
+                            <h5 class="countTitle">6,000</h5>
+                            <p class="CountText">Residents</p>
+                    </div>
+                    <div class="countBox">
+                            <h5 class="countTitle">6,200.000</h5>
+                            <p class="CountText">Sq.Ft. Total Area</p>
+                    </div>
+           </div>
             </div>
         </div>
-    </div>
+    </header>
 @endsection
 @section('header_extra')
 @endsection

@@ -52,12 +52,15 @@ a {
 a:hover {
     color: #fff;
 }
+
 .btnEnquire:hover {
     color: #1e293f;
 }
-#enquire:hover{
+
+#enquire:hover {
     color: #fff;
 }
+
 .header {
     width: 100%;
     position: relative;
@@ -110,20 +113,23 @@ a:hover {
     background-image: url("../images/banner-img.webp");
     height: 600px;
 }
-#contactHeader{
+
+#contactHeader {
 
     background-image: url("../images/contact.webp");
 }
-#arabianRanches3Header{
+
+#arabianRanches3Header {
     background-image: url("../images/arabianRanches3.webp");
 }
-#arabianRanches2Header{
+
+#arabianRanches2Header {
     background-image: url("../images/arabianRanches2.webp");
 }
-#arabianRanches1Header{
+
+#arabianRanches1Header {
     background-image: url("../images/arabianRanches1.webp");
 }
-
 
 .overlayClr {
     position: relative;
@@ -169,13 +175,16 @@ a:hover {
     text-transform: uppercase;
     margin-bottom: 15px;
 }
+
 .headerContentBox p {
     color: #fff;
     font-size: 16px;
 }
-.fillBtn:hover{
+
+.fillBtn:hover {
     color: #fff;
 }
+
 .fillBtn {
     width: fit-content;
     height: 44px;
@@ -187,6 +196,7 @@ a:hover {
     color: #fff;
     text-align: center;
 }
+
 .darkfillBtn {
     width: fit-content;
     height: 44px;
@@ -340,8 +350,8 @@ a:hover {
 }
 
 .sectionDark.secMxHt {
-     /* margin-bottom: 180px; */
-     margin-bottom: 100px;
+    /* margin-bottom: 180px; */
+    margin-bottom: 100px;
 }
 
 .secTitle {
@@ -374,7 +384,7 @@ a:hover {
 .secVideo img {
     width: 100%;
     height: 340px;
-    object-fit: contain;
+    object-fit: coover;
 }
 
 .pd-r-50 {
@@ -534,7 +544,6 @@ a:hover {
 .footer {
     /* background-color: #1e293f; */
     background-color: #879bb7;
-
     padding: 40px 0px 0px;
 }
 
@@ -714,8 +723,7 @@ a:hover {
 .secContentBox .pText.smText {
     margin-bottom: 24px;
     text-align: center;
-    /* padding: 0px 50px; */
-    padding: 0px 100px;
+    padding: 0px 50px;
 }
 
 .section.pad-60-auto {
@@ -862,7 +870,7 @@ a:hover {
     border-radius: 10px;
 }
 
-.inputFieldBar input{
+.inputFieldBar input {
     width: 100%;
     border-radius: 15px;
     height: 44px;
@@ -870,6 +878,7 @@ a:hover {
     padding: 15px;
     font-weight: 500;
 }
+
 .inputFieldBar textarea {
     width: 100%;
     border-radius: 15px;
@@ -1020,7 +1029,12 @@ a:hover {
     flex: 1;
 }
 
-.formRow .columBox .form-select {
+.formRow .columBox .form-select,
+.formRow .columBox .form-input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    line-height: 1.5;
     background-color: unset;
     border: 0px;
     border-bottom: 1.5px solid #1e293f;
@@ -1078,6 +1092,7 @@ a:hover {
     font-weight: 600;
     color: #1e293f;
     font-size: 14px;
+    margin-bottom: 20px;
 }
 
 .columBox .form-select {

@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Image\Manipulations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
+use Carbon\Carbon;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use Carbon\Carbon;
 
 class Community extends Model implements HasMedia
 {
@@ -34,8 +32,7 @@ class Community extends Model implements HasMedia
      * @var array
      */
     protected $richTextFields = [
-        'description',
-        'short_description'
+        'description'
     ];
     /**
      * The attributes that should be append with arrays.
@@ -44,60 +41,34 @@ class Community extends Model implements HasMedia
      */
     protected $appends = [
         'mainImage',
-        'imageGallery',
-        'video',
+        'subImages',
         'formattedCreatedAt'
     ];
-    /**
-     * Get the options for generating the slug.
-     */
-    public function getSlugOptions() : SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom('name')
-            ->saveSlugsTo('slug');
-    }
     /**
      * SET Attributes
      */
     /**
      * GET Attributes
      */
+    /* Get the options for generating the slug.
+    */
+   public function getSlugOptions() : SlugOptions
+   {
+       return SlugOptions::create()
+           ->generateSlugsFrom('name')
+           ->saveSlugsTo('slug');
+   }
     public function getMainImageAttribute()
     {
-        if(url_exists($this->getFirstMediaUrl('mainImages', 'resize'))){
-            return $this->getFirstMediaUrl('mainImages', 'resize');
-        }
-        return false;
-        //return $this->getFirstMediaUrl('mainImages', 'resize');
+        return $this->getFirstMediaUrl('mainImages');
     }
-    public function getImageGalleryAttribute()
+    public function getSubImagesAttribute()
     {
         $subImages = array();
-        foreach($this->getMedia('imageGalleries') as $image){
-            if($image->hasGeneratedConversion('resize_images')){
-                array_push($subImages, ['id'=> $image->id, 'path'=>$image->getUrl('resize_images')]);
-            }else{
-                array_push($subImages, ['id'=> $image->id, 'path'=>$image->getUrl()]);
-            }
+        foreach($this->getMedia('subImages') as $image){
+            array_push($subImages, $image->getUrl());
         }
        return $subImages;
-    }
-    public function getvideoAttribute()
-    {
-        return $this->getFirstMediaUrl('videos');
-    }
-    public function registerMediaConversions(Media $media = null) : void
-    {
-        $this->addMediaConversion('resize')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('mainImages')
-            ->nonQueued();
-
-        $this->addMediaConversion('resize_images')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('imageGalleries')
-            ->nonQueued();
     }
     public function getFormattedCreatedAtAttribute($value)
     {
@@ -106,53 +77,46 @@ class Community extends Model implements HasMedia
     /**
      * FIND Relationship
      */
-    public function stats()
-    {
-        return $this->morphMany(Stat::class, 'statable');
-    }
-
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'community_categories', 'community_id', 'category_id');
-    }
-    // public function developers()
-    // {
-    //     return $this->belongsToMany(Developer::class, 'agent_communities', 'community_id', 'agent_id');
-    // }
-    public function communities()
-    {
-        return $this->belongsToMany(Developer::class, 'agent_communities', 'community_id', 'agent_id');
-    }
-    public function tags()
-    {
-        return $this->morphMany(Tag::class, 'tagable');
-    }
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    // public function properties()
-    // {
-    //     return $this->belongsToMany(Property::class, 'property_communities', 'community_id', 'property_id');
-    // }
-    public function subCommunities()
+    public function properties()
     {
-        return $this->hasMany(Subcommunity::class, 'community_id', 'id');
+        return $this->belongsToMany(Property::class, 'property_communities', 'community_id', 'property_id');
     }
-    // public function communities()
-    // {
-    //     return $this->belongsTo(Community::class, 'community_id', 'id');
-    // }
-    public function communityDevelopers()
+    public function subcommunities()
     {
-        return $this->belongsToMany(Developer::class, 'community_developers', 'community_id', 'developer_id');
+        return $this->belongsTo(Subcommunity::class, 'subcommunity_id', 'id');
     }
-    public function floorplans()
+    public function developers()
     {
-        return $this->hasMany(FloorPlan::class);
+        return $this->belongsTo(Developer::class, 'developer_id', 'id');
     }
-
+    public function completionStatus()
+    {
+        return $this->belongsTo(CompletionStatus::class, 'construction_status', 'id');
+    }
+    public function accommodations()
+    {
+        return $this->belongsToMany(Accommodation::class, 'community_accommodations', 'community_id', 'accomodation_id');
+    }
+    public function proximities()
+    {
+        return $this->belongsToMany(Neighbour::class, 'community_proximities', 'community_id', 'neighbour_id')->withPivot('value','id');
+    }
+    public function amenities()
+    {
+        return $this->belongsToMany(Amenity::class, 'community_amenities', 'community_id', 'amenity_id');
+    }
+    public function facilities()
+    {
+        return $this->belongsToMany(Amenity::class, 'community_facilities', 'community_id', 'facility_id');
+    }
+    public function offerType()
+    {
+        return $this->belongsToMany(OfferType::class, 'community_offertype', 'community_id', 'offerType_id');
+    }
 
     /**
     * FIND local scope
@@ -163,7 +127,7 @@ class Community extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

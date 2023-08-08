@@ -9,20 +9,25 @@
     @section('pageKeyword', $website_keyword)
 @endif
 @section('header')
-    <div class="headerContentBox">
-        <div>
-            <h2 class="text-uppercase">discover Arabian Ranches </h2>
-            <p>
-                Wake up to a new days and lives in a moments. Nurture your creative and let your imagination
-                wander. Release your inner child and just be incredibly, unabasehasdly, happy. Welcome to ARABIAN
-                RANCHES
-            </p>
+<header class="header overlayClr" >
+    <div class="container">
+        @include('frontend.layout.nav')
+        <div class="headerContentBox">
+            <div>
+                <h2 class="text-uppercase">discover Arabian Ranches </h2>
+                <p>
+                    Wake up to a new days and lives in a moments. Nurture your creative and let your imagination
+                    wander. Release your inner child and just be incredibly, unabasehasdly, happy. Welcome to ARABIAN
+                    RANCHES
+                </p>
+            </div>
+            <a href="{{ asset('frontend/assets/images/arabianRanches.mp4') }}" class="youtube videoLink">
+                <img src="{{ asset('frontend/assets/images/video-thumnail-img-1.webp') }}">
+            </a>
+            <a href="#" class="fillBtn minWdLg positionBtmC btnEnquire">For more Enquires</a>
         </div>
-        <a href="{{ asset('frontend/assets/images/arabianRanches.mp4') }}" class="youtube videoLink">
-            <img src="{{ asset('frontend/assets/images/video-thumnail-img-1.jpg') }}">
-        </a>
-        <a href="#" class="fillBtn minWdLg positionBtmC btnEnquire">For more Enquires</a>
     </div>
+</header>
 @endsection
 @section('header_extra')
 <section class="sectionDark secMxHt">

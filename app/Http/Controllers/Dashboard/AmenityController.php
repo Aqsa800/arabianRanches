@@ -10,10 +10,6 @@ use Auth;
 
 class AmenityController extends Controller
 {
-    function __construct()
-    {
-        
-    }
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +20,9 @@ class AmenityController extends Controller
         $amenities = Amenity::with('user')
         ->applyFilters($request->only(['status']))
         ->orderBy('id','desc')
-        ->get();
+        ->paginate(5);
 
-        return view('dashboard.realEstate.amenities.index', compact('amenities'));
+        return view('dashboard.realState.amenities.index', compact('amenities'));
     }
 
     /**
@@ -36,7 +32,7 @@ class AmenityController extends Controller
      */
     public function create()
     {
-        return view('dashboard.realEstate.amenities.create');
+        return view('dashboard.realState.amenities.create');
     }
 
     /**
@@ -52,21 +48,11 @@ class AmenityController extends Controller
             $amenity->name = $request->name;
             $amenity->status = $request->status;
             $amenity->user_id = Auth::user()->id;
-            if ($request->hasFile('image')) {
-                $amenity->addMediaFromRequest('image')->toMediaCollection('images', 'amenityFiles');
-            }
+            $amenity->addMediaFromRequest('image')->toMediaCollection('images');
             $amenity->save();
-            return response()->json([
-                'success' => true,
-                'message'=> 'Amenity has been created successfully.',
-                'redirect' => route('dashboard.amenities.index'),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route('dashboard.amenities.index'),
-            ]);
+            return redirect()->route('dashboard.amenities.index')->with('success','Amenity has been created successfully.');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.amenities.index')->with('error',$error->getMessage());
         }
 
     }
@@ -90,7 +76,7 @@ class AmenityController extends Controller
      */
     public function edit(Amenity $amenity)
     {
-        return view('dashboard.realEstate.amenities.edit',compact('amenity'));
+        return view('dashboard.realState.amenities.edit',compact('amenity'));
     }
 
     /**
@@ -107,21 +93,15 @@ class AmenityController extends Controller
             $amenity->status = $request->status;
             if ($request->hasFile('image')) {
                 $amenity->clearMediaCollection('images');
-                $amenity->addMediaFromRequest('image')->toMediaCollection('images', 'amenityFiles');
+                $amenity->addMediaFromRequest('image')->toMediaCollection('images');
             }
             $amenity->save();
-            return response()->json([
-                'success' => true,
-                'message'=> 'Amenity has been updated successfully.',
-                'redirect' => route('dashboard.amenities.index'),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route('dashboard.amenities.index'),
-            ]);
+
+            return redirect()->route('dashboard.amenities.index')->with('success','Amenity has been updated successfully');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.amenities.index')->with('error',$error->getMessage());
         }
+
     }
 
     /**

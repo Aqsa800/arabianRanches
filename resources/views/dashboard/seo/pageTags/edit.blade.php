@@ -37,12 +37,9 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="name">Page Name</label>
-                                            <select class="form-control  @error('page_name') is-invalid @enderror" id="page_name"
-                                                name="page_name" required>
-                                                @foreach ($routes as $key=>$value)
-                                                <option value="{{ $value->getName() }}" @if($page_tag->page_name == $value->getName()) selected @endif>{{ $value->getName() }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" value="{{$page_tag->page_name }}"
+                                                class="form-control @error('page_name') is-invalid @enderror" id="name"
+                                                placeholder="Enter Page Name" name="page_name">
                                             @error('page_name')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -66,7 +63,19 @@
                                             @enderror
                                         </div>
                                     </div>
-
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="page_url">Page URL</label>
+                                            <input type="text" value="{{ $page_tag->page_url }}"
+                                                class="form-control @error('page_url') is-invalid @enderror" id="page_url"
+                                                placeholder="Enter Page Name" name="page_url">
+                                            @error('page_url')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="meta_title">Meta Title</label>
@@ -93,35 +102,16 @@
                                             @enderror
                                         </div>
                                     </div>
-
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="meta_description">Meta Description</label>
                                             <textarea class="form-control @error('meta_description') is-invalid @enderror" id="meta_description"
-                                                placeholder="Enter Meta Description" name="meta_description">{{ $page_tag->meta_description }}</textarea>
+                                                placeholder="Enter Meta ViewPort" name="meta_description">{{ $page_tag->meta_description }}</textarea>
                                             @error('meta_description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="banner_image">Banner Image</label>
-                                            <div class="custom-file   @error('banner_image') is-invalid @enderror">
-                                                <input type="file" class="custom-file-input @error('banner_image') is-invalid @enderror" id="banner_image" name="banner_image"
-                                                    accept=".webp">
-                                                <label class="custom-file-label" for="banner_image">Choose file</label>
-                                            </div>
-                                            @error('banner_image')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                            @if ($page_tag->bannerImage)
-                                                <img src="{{ $page_tag->bannerImage }}" alt="{{ $page_tag->bannerImage }}">
-                                            @endif
                                         </div>
                                     </div>
                                 </div>

@@ -84,10 +84,10 @@ class WebsiteSetting extends Model implements HasMedia
     {
         return self::where('key', 'favicon')->first()->getFirstMediaUrl('favicons');
     }
-    
+
     public static function getFooterLogo()
     {
         return self::where('key', 'footer_logo')->first()->getFirstMediaUrl('footer_logos');
     }
-    
+
 }

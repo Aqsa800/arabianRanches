@@ -28,34 +28,18 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form class="form-boder" id="storeForm" files="true" method="POST" enctype="multipart/form-data"
+                        <form class="form-boder" files="true" method="POST" enctype="multipart/form-data"
                             action="{{ route('dashboard.testimonials.store') }}">
                             @csrf
-
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="name">Client Name</label>
-                                            <input type="text" value="{{ old('client_name') }}"
-                                                class="form-control @error('client_name') is-invalid @enderror" id="client_name"
-                                                placeholder="Enter Client Name" name="client_name" required>
-                                            @error('client_name')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="logo">Client Image</label>
-                                            <div class="custom-file   @error('image') is-invalid @enderror">
-                                                <input type="file" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image"
-                                                    accept="image/*" required>
-                                                <label class="custom-file-label" for="image">Choose file</label>
-                                            </div>
-                                            @error('image')
+                                            <label for="name">Name</label>
+                                            <input type="text" value="{{ old('name') }}"
+                                                class="form-control @error('name') is-invalid @enderror" id="name"
+                                                placeholder="Enter Name" name="name">
+                                            @error('name')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -65,8 +49,8 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="status">Status</label>
-                                            <select class="form-control select1 @error('status') is-invalid @enderror" id="status"
-                                                name="status" required>
+                                            <select class="form-control @error('status') is-invalid @enderror" id="status"
+                                                name="status">
                                                 @foreach (config('constants.statuses') as $key=>$value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
@@ -78,29 +62,39 @@
                                             @enderror
                                         </div>
                                     </div>
-
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="rating">Rating</label>
-                                            <select data-placeholder="Select Rating" style="width: 100%;" class=" form-control select1 @error('rating') is-invalid @enderror" id="rating" name="rating" required>
-                                                @foreach (config('constants.rating') as $value)
-                                                <option value="{{ $value }}">{{ $value }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('rating')
+                                            <label for="logo">Image</label>
+                                            <div class="custom-file   @error('image') is-invalid @enderror">
+                                                <input type="file" class="custom-file-input" id="image" name="image"
+                                                    accept=".png, .jpg, .jpeg">
+                                                <label class="custom-file-label" for="image">Choose file</label>
+                                            </div>
+                                            @error('image')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
                                     </div>
-
-
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="name">Designation</label>
+                                            <input type="text" value="{{ old('designation') }}"
+                                                class="form-control @error('designation') is-invalid @enderror" id="designation"
+                                                placeholder="Enter Name" name="designation">
+                                            @error('designation')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="feedback">Feedback</label>
-                                            <textarea type="text" class="form-control @error('feedback') is-invalid @enderror" id="feedback" placeholder="Enter Feedback" rows="4" name="feedback">{{ old('feedback') }}</textarea>
-                                            @error('feedback')
+                                            <label for="message">Message</label>
+                                            <textarea type="text" class="form-control @error('message') is-invalid @enderror" id="message" placeholder="Enter Name" name="message">{{ old('message') }}</textarea>
+                                            @error('message')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -113,7 +107,7 @@
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary storeBtn">Submit</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
                     </div>

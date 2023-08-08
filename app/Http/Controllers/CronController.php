@@ -13,287 +13,250 @@ use App\Models\{
     CompletionStatus,
     Developer,
     Imagegallery,
-    OfferType,
     Property,
+    PropertyBedroom,
+    PropertyAccommodation,
     PropertyAmenity,
     Subcommunity
 };
-use Illuminate\Http\File;
-use App\Jobs\XMLSubImageJob;
-
 class CronController extends Controller
 {
 
+    public function addxml() {
+        $apiURL     = 'http://xml.propspace.com/feed/xml.php?cl=1019&pid=8245&acc=8807';
 
+        $xml_arr  = simplexml_load_file($apiURL,'SimpleXMLElement',LIBXML_NOCDATA);
 
+       $xml_arr  = json_decode(json_encode($xml_arr,true),true);
 
-    public function addxml()
-    {
-        $apiURL     = 'https://manda.propertybase.com/api/v2/feed/00D4J000000qB4kUAE/XML2U/a0L4J0000008Hk4UAE/full';
+        // dd($xml_arr['Listing']);
+        $propertAll = Property::where('reference_number','!=', NULL)->get();
 
-        $xml_arr  = simplexml_load_file($apiURL, 'SimpleXMLElement', LIBXML_NOCDATA);
+        foreach($propertAll as $prop){
+            $flag = 0;
+            foreach($xml_arr['Listing'] as $key => $value){
+                if($prop['reference_number'] == $value['Property_Ref_No']){
+                    $flag = 1;
+                    break;
+                }else{
+                    $flag = 0;
+                }
+            }
+            if($flag == 0){
+                $propDel = Property::where('id','=', $prop['id'])->first();
+                $gallDelProp = Imagegallery::where('property_id',$prop['id'])->get();
+                foreach($gallDelProp as $gallr){
+                    $gallr->delete();
+                }
 
-        $xml_arr  = json_decode(json_encode($xml_arr, true), true);
+                $propDel->amenities()->detach();
+                $propDel->accommodations()->detach();
 
+                //dd($propDel);
+                $propDel->delete();
+            }
+        }
+        foreach($xml_arr['Listing'] as $key => $value) {
 
-        foreach ($xml_arr['listing'] as $key => $value) {
-
-            $allraedy               = Property::where('reference_number', $value['id'])->first();
-
+            $allraedy               = Property::where('reference_number',$value['Property_Ref_No'])->first();
             $property               = $allraedy ? $allraedy : new Property;
 
-            $property->reference_number     = array_key_exists("id", $value) ? $value['id'] : '';
+                $img = array_key_exists("Images",$value) ? (!empty($value['Images']) ? $value['Images']['image']['0'] : '') : 'frontend/assets/images/properties/p1.webp';
+                $property->cover_img = $img;
 
-            $property->unit_refNo     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['unit_number']) ? $value['custom_fields']['unit_number'] : '') : '';
+                $property->reference_number     = array_key_exists("Property_Ref_No",$value) ? $value['Property_Ref_No'] : '';
+                $property->unit_refNo     = array_key_exists("Unit_Reference_No",$value) ? (!empty($value['Unit_Reference_No']) ? $value['Unit_Reference_No'] : '') : '';
+                $property->permit_number     = array_key_exists("permit_number",$value) ? (!empty($value['permit_number']) ? $value['permit_number'] : '') : '';
+                $property->sub_title     = array_key_exists("Property_Name",$value) ? (!empty($value['Property_Name']) ? $value['Property_Name'] : '') : '';
+                $property->name     = array_key_exists("Property_Title",$value) ? (!empty($value['Property_Title']) ? $value['Property_Title'] : '') : '';
+                // $property->community_id = 1;
 
-            $property->permit_number     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__rera_permit_number']) ? $value['custom_fields']['pba_uaefields__rera_permit_number'] : '') : '';
-            $property->sub_title     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__property_propertyfinder']) ? $value['custom_fields']['pba_uaefields__property_propertyfinder'] : '') : '';
-            $property->name     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['listing_title']) ? $value['general_listing_information']['listing_title'] : '') : '';
+                // $property->category_id = 1;
+                // $property->user_id = 1;
 
-            // $property->community_id = 1;
+                $property->description     = array_key_exists("Web_Remarks",$value) ? (!empty($value['Web_Remarks']) ? $value['Web_Remarks'] : '') : '';
 
-            // $property->category_id = 1;
-            // $property->user_id = 1;
+                $property->bedrooms     = array_key_exists("No_of_Rooms",$value) ? (!empty($value['No_of_Rooms']) ? $value['No_of_Rooms'] : 0) : 0;
+                $property->bathrooms     = array_key_exists("No_of_Bathroom",$value) ? (!empty($value['No_of_Bathroom']) ? $value['No_of_Bathroom'] : 0) : 0;
+                $property->parking     = array_key_exists("Parking",$value) ? (!empty($value['Parking']) ? $value['Parking'] : 0) : 0;
+                $property->built_area     = array_key_exists("Unit_Builtup_Area",$value) ? (!empty($value['Unit_Builtup_Area']) ? $value['Unit_Builtup_Area'] : '') : '';
+                $property->plot_area     = array_key_exists("Plot_Area",$value) ? (!empty($value['Plot_Area']) ? $value['Plot_Area'] : '') : '';
+                $property->unit_measure     = array_key_exists("unit_measure",$value) ? (!empty($value['unit_measure']) ? $value['unit_measure'] : 'Sq.Ft.') : 'Sq.Ft.';
+                $property->price     = array_key_exists("Price",$value) ? (!empty($value['Price']) ? $value['Price'] : '') : '';
+                $property->cheques     = array_key_exists("Cheques",$value) ? (!empty($value['Cheques']) ? $value['Cheques'] : 0) : 0;
+                $property->cheque_frequency     = array_key_exists("Frequency",$value) ? (!empty($value['Frequency']) ? $value['Frequency'] : '') : '';
+                $property->unit_model     = array_key_exists("unit_model",$value) ? (!empty($value['unit_model']) ? $value['unit_model'] : '') : '';
+                // $property->is_feature     = array_key_exists("Featured",$value) ? (!empty($value['Featured']) ? $value['Featured'] : 0) : 0;
+                $property->exclusive     = array_key_exists("Exclusive",$value) ? (!empty($value['Exclusive']) ? $value['Exclusive'] : '0') : '0';
 
-            $property->description     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['description']) ? $value['general_listing_information']['description'] : '') : '';
-
-
-            $property->bedrooms     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['bedrooms']) ? $value['general_listing_information']['bedrooms'] : 0) : 0;
-            $property->bathrooms     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['fullbathrooms']) ? $value['general_listing_information']['fullbathrooms'] : 0) : 0;
-            $property->parking_space     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__parking']) ? $value['custom_fields']['pba_uaefields__parking'] : 0) : 0;
-            $property->furnished     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__furnished']) ? $value['custom_fields']['pba_uaefields__furnished'] : '') : '';
-
-            $property->area     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['totalarea']) ? $value['general_listing_information']['totalarea'] : '') : '';
-
-
-            $property->price     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['listingprice']) ? $value['general_listing_information']['listingprice'] : '') : '';
-            $property->currency     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['currency_iso_code']) ? $value['general_listing_information']['currency_iso_code'] : '') : '';
-
-            $property->cheque_frequency     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__price_unit']) ? $value['custom_fields']['pba_uaefields__price_unit'] : '') : '';
-
-            $property->address     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__propertyfinder_region']) ? $value['custom_fields']['pba_uaefields__propertyfinder_region'] : '') : '';
-
-
-            $property->exclusive     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['exclusive']) ? ($value['custom_fields']['exclusive'] == "true" ? '1' : '0') : '0') : '0';
-
-            $property->address_latitude     = array_key_exists("address_information", $value) ? (!empty($value['address_information']['latitude']) ? $value['address_information']['latitude'] : 0) : 0;
-            $property->address_longitude     = array_key_exists("address_information", $value) ? (!empty($value['address_information']['longitude']) ? $value['address_information']['longitude'] : 0) : 0;
-
-            $property->emirate     = array_key_exists("address_information", $value) ? (!empty($value['address_information']['city']) ? $value['address_information']['city'] : '') : '';
-
-            $property->primary_view     = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__view']) ? $value['custom_fields']['pba_uaefields__view'] : '') : '';
-
-
-            $property->property_source     = 'xml';
-
-            $property->status     = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['status']) ? $value['general_listing_information']['status'] : config('constants.active')) : config('constants.active');
-
-            $property->rating     = 5;
-            $property->user_id     = 1;
+                $property->address_latitude     = array_key_exists("Latitude",$value) ?(!empty($value['Latitude']) ? $value['Latitude'] : 0) : 0;
+                $property->address_longitude     = array_key_exists("Longitude",$value) ? (!empty($value['Longitude']) ? $value['Longitude'] : 0) : 0;
+                $property->emirate     = array_key_exists("Emirate",$value) ? (!empty($value['Emirate']) ? $value['Emirate'] : '') : '';
+                $property->primary_view     = array_key_exists("Primary_View",$value) ? (!empty($value['Primary_View']) ? $value['Primary_View'] : '') : '';
+                $property->web_tour     = array_key_exists("Web_Tour",$value) ? (!empty($value['Web_Tour']) ? $value['Web_Tour'] : '') : '';
+                $property->threesixty_tour     = array_key_exists("Threesixty_Tour",$value) ? (!empty($value['Threesixty_Tour']) ? $value['Threesixty_Tour'] : '') : '';
+                $property->audio_tour     = array_key_exists("Audio_Tour",$value) ? (!empty($value['Audio_Tour']) ? $value['Audio_Tour'] : '') : '';
+                $property->virtual_tour     = array_key_exists("Virtual_Tour",$value) ? (!empty($value['Virtual_Tour']) ? $value['Virtual_Tour'] : '') : '';
+                $property->property_source     = 'xml';
+                $property->status     = 'active';
+                $property->rating     = 5;
+                $property->user_id     = 1;
+                $property->featured_project     = 0;
 
 
-            $staCode = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['listingtype']) ? $value['general_listing_information']['listingtype'] : '') : '';
-            if ($staCode != '') {
-                if ($staCode == "Sale" || $staCode == "sale") {
-                    $staCode = "Resale";
+                $staCode = array_key_exists("Ad_Type",$value) ? $value['Ad_Type']: '';
+                if($staCode != ''){
+                    $cat = Category::where('name', 'like', '%' .$staCode. '%')->first();
+                    if(!empty($cat)){
+                        $property->category()->associate($cat->id);
+                    }else{
+                        $catgry = new Category;
+                        $catgry->name = $staCode;
+                        $catgry->status = 'active';
+                        $catgry->user_id = 1;
+                        $catgry->save();
+                        $property->category()->associate($catgry->id);
+                    }
                 }
-                $cat = Category::where('name', 'like', '%' . $staCode . '%')->first();
-                if (!empty($cat)) {
-                    $property->category()->associate($cat->id);
-                } else {
-                    $catgry = new Category;
-                    $catgry->name = $staCode;
-                    $catgry->status = config('constants.active');
-                    $catgry->user_id = 1;
-                    $catgry->save();
-                    $property->category()->associate($catgry->id);
+
+                $devName = array_key_exists("Developer",$value) ? $value['Developer'] : '';
+                if($devName != ''){
+                    $partner = Developer::where('name', 'like', '%' .$devName. '%')->first();
+                    if(!empty($partner)){
+                        $property->developer()->associate($partner->id);
+                    }else{
+                        $partnr = new Developer;
+                        $partnr->name = $devName;
+                        $partnr->status = 'active';
+                        $partnr->save();
+                        $property->developer()->associate($partnr->id);
+                    }
+                }
+
+                $comName = array_key_exists("Community",$value) ? $value['Community'] : '';
+                if($comName != ''){
+                    $community = Community::where('name', 'like', '%' .$comName. '%')->first();
+                    if(!empty($community)){
+                        $property->communities()->associate($community->id);
+                    }else{
+                        $comnty = new Community();
+                        $comnty->name = $comName;
+
+                        $comnty->emirates = array_key_exists("Emirate",$value) ? $value['Emirate'] : '';
+                        $comnty->status = 'active';
+                        $comnty->user_id = 1;
+                        $comnty->guide = 0;
+                        $comnty->save();
+                        $property->communities()->associate($comnty->id);
+                    }
+                }
+                $subComName = array_key_exists("Property_Name",$value) ? $value['Property_Name'] : '';
+                if($subComName != ''){
+                    $subCommunity = Subcommunity::where('name', 'like', '%' .$subComName. '%')->where('community_id',$property->community_id)->first();
+                    if(!empty($subCommunity)){
+                        $property->subcommunities()->associate($subCommunity->id);
+                    }else{
+                        $subComnty = new Subcommunity();
+                        $subComnty->name = $subComName;
+                        $subComnty->community_id = $property->community_id;
+                        $subComnty->status = 'active';
+                        $subComnty->user_id = 1;
+                        $subComnty->save();
+                        $property->subcommunities()->associate($subComnty->id);
+                    }
+                }
+
+                if(array_key_exists("Listing_Agent",$value)){
+                   $existsuser = Agent::where('email',$value['Listing_Agent_Email'])->first();
+
+                   $users = $existsuser ? $existsuser : new Agent;
+                   $users->name = isset($value['Listing_Agent']) ? $value['Listing_Agent'] : '';
+                   $users->email = isset($value['Listing_Agent_Email']) ? $value['Listing_Agent_Email'] : '';
+                   $users->contact_number = isset($value['Listing_Agent_Phone']) ? $value['Listing_Agent_Phone'] : '';
+                   $users->user_id = 1;
+                   $users->save();
+                   $property->agent()->associate($users->id);
+                }
+
+                $compStatus = array_key_exists("completion_status",$value) ? $value['completion_status'] : '';
+
+                if(!is_array($value['completion_status']) ){
+                    $existcompl = CompletionStatus::where('name', 'like', '%' .$compStatus. '%')->first();
+                    if(!empty($existcompl)){
+                        $property->completionStatus()->associate($existcompl->id);
+                    }else{
+                        $existcomplStats =  new CompletionStatus;
+                        $existcomplStats->name = $compStatus;
+                        $existcomplStats->status = 'active';
+                        $existcomplStats->user_id = 1;
+                        $existcomplStats->save();
+
+                        $property->completionStatus()->associate($existcomplStats->id);
+                    }
+
+                }
+
+                $property->save();
+            if(array_key_exists("Bedrooms",$value)){
+                $bedCheck = PropertyBedroom::where('property_id',$property->id)->where('bedroom',$value['Bedrooms'])->first();
+                if($bedCheck){}else{
+                    $bedroom = new PropertyBedroom;
+                    $bedroom->property_id= $property->id;
+                    $bedroom->bedroom = $value['Bedrooms'];
+                    $bedroom->save();
                 }
             }
 
-            $comName = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__community_propertyfinder']) ? $value['custom_fields']['pba_uaefields__community_propertyfinder'] : '') : '';
-            if ($comName != '') {
-                $community = Community::where('name', 'like', '%' . $comName . '%')->first();
-                if (!empty($community)) {
-                    $property->communities()->associate($community->id);
-                } else {
-                    $comnty = new Community();
-                    $comnty->name = $comName;
-                    $comnty->emirates = array_key_exists("address_information", $value) ? (!empty($value['address_information']['city']) ? $value['address_information']['city'] : '') : '';
-                    $comnty->status = config('constants.active');
-                    $comnty->user_id = 1;
-                    $comnty->save();
-                    $property->communities()->associate($comnty->id);
-                }
-            }
+            if(array_key_exists("Unit_Type",$value)){
 
-            $offerType = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__property_sub_type']) ? $value['custom_fields']['pba_uaefields__property_sub_type'] : '') : '';
-            if ($offerType != '') {
-                $offerName = explode(' ', trim($offerType))[0];
 
-                $offType = OfferType::where('name', 'like', '%' . $offerName . '%')->first();
-                if (!empty($offType)) {
-                    $property->offerType()->associate($offType->id);
-                } else {
-                    $typeOffer = new OfferType();
-                    $typeOffer->name = $offerName;
-                    $typeOffer->status = config('constants.active');
-                    $typeOffer->user_id = 1;
-                    $typeOffer->save();
-                    $property->offerType()->associate($typeOffer->id);
-                }
-            }
-
-            $subComName = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__sub_community_propertyfinder']) ? $value['custom_fields']['pba_uaefields__sub_community_propertyfinder'] : '') : '';
-            if ($subComName != '') {
-                $subCommunity = Subcommunity::where('name', 'like', '%' . $subComName . '%')->where('community_id', $property->community_id)->first();
-                if (!empty($subCommunity)) {
-                    $property->subcommunities()->associate($subCommunity->id);
-                } else {
-                    $subComnty = new Subcommunity();
-                    $subComnty->name = $subComName;
-                    $subComnty->community_id = $property->community_id;
-                    $subComnty->status = config('constants.active');
-                    $subComnty->user_id = 1;
-                    $subComnty->save();
-                    $property->subcommunities()->associate($subComnty->id);
-                }
-            }
-
-            $propAccom = array_key_exists("general_listing_information", $value) ? (!empty($value['general_listing_information']['propertytype']) ? $value['general_listing_information']['propertytype'] : '') : '';
-            if ($propAccom != '') {
-                $propTyp = Accommodation::where('name', 'like', '%' . $propAccom . '%')->first();
+                $propTyp = Accommodation::where('name',$value['Unit_Type'])->first();
                 $acc = $propTyp ? $propTyp : new Accommodation;
-                $acc->name = $propAccom;
-                $acc->status = config('constants.active');
+                $acc->name = $value['Unit_Type'];
+                $acc->status = 'active';
                 $acc->user_id = 1;
                 $acc->save();
-                $property->accommodations()->associate($acc->id);
-            }
-
-            if (array_key_exists("listing_agent", $value)) {
-                $existsuser = Agent::where('email', $value['listing_agent']['listing_agent_email'])->first();
-
-                $users = $existsuser ? $existsuser : new Agent;
-                $users->name = (isset($value['listing_agent']['listing_agent_firstname']) ? $value['listing_agent']['listing_agent_firstname'] : '') . ' ' . (isset($value['listing_agent']['listing_agent_lastname']) ? $value['listing_agent']['listing_agent_lastname'] : '');
-                $users->email = isset($value['listing_agent']['listing_agent_email']) ? $value['listing_agent']['listing_agent_email'] : '';
-                $users->whatsapp_number = isset($value['listing_agent']['listing_agent_mobil_phone']) ? $value['listing_agent']['listing_agent_mobil_phone'] : '';
-                $users->contact_number = isset($value['listing_agent']['listing_agent_phone']) ? $value['listing_agent']['listing_agent_phone'] : '';
-                $users->status = config('constants.Inactive');
-                $users->user_id = 1;
-                $users->save();
-                $property->agent()->associate($users->id);
-            }
-
-            $compStatus = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__completion_status']) ? $value['custom_fields']['pba_uaefields__completion_status'] : '') : '';
-
-            if ($compStatus != '') {
-                $existcompl = CompletionStatus::where('name', 'like', '%' . $compStatus . '%')->first();
-                if (!empty($existcompl)) {
-                    $property->completionStatus()->associate($existcompl->id);
-                } else {
-                    $existcomplStats =  new CompletionStatus;
-                    $existcomplStats->name = $compStatus;
-                    $existcomplStats->status = config('constants.active');
-                    $existcomplStats->user_id = 1;
-                    $existcomplStats->save();
-
-                    $property->completionStatus()->associate($existcomplStats->id);
+                $accCheck = PropertyAccommodation::where('property_id',$property->id)->where('accommodation_id',$acc->id)->first();
+                if($accCheck){}else{
+                $propertyAcc = new PropertyAccommodation;
+                $propertyAcc->property_id= $property->id;
+                $propertyAcc->accommodation_id  = $acc->id;
+                $propertyAcc->save();
                 }
             }
 
-            $property->save();
+            if(array_key_exists("Images",$value) && (count($value['Images']['image']) > 0)){
+                foreach ($value['Images']['image'] as $keys => $img) {
 
+                    $checkGM = Imagegallery::where('property_id',$property->id)->where('image',$img)->first();
+                    $gallery                = $checkGM ? $checkGM : new Imagegallery;
+                    $gallery->property_id   = $property->id;
+                    $gallery->image  = $img;
+                    $gallery->category  = 'gallery';
+                    $gallery->save();
+                }
+            }
 
+            if(array_key_exists("Facilities",$value)) {
+                $amnIdAll =[];
+                foreach($value['Facilities']['facility'] as $keys => $faci) {
 
-            $amnnity = array_key_exists("custom_fields", $value) ? (!empty($value['custom_fields']['pba_uaefields__private_amenities']) ? $value['custom_fields']['pba_uaefields__private_amenities'] : '') : '';
-
-            if ($amnnity != '') {
-                $amnIdAll = [];
-                $amnityAll = explode(";", $amnnity);
-                foreach ($amnityAll as $keys => $faci) {
-
-                    $checkFC = Amenity::where('name', $faci)->first();
+                    $checkFC = Amenity::where('name',$faci)->first();
                     $facility  = $checkFC ? $checkFC : new Amenity();
                     $facility->name   = $faci;
-                    $facility->status   = config('constants.active');
+                    $facility->status   = 'active';
                     $facility->user_id   = 1;
                     $facility->save();
-                    $facCheck = PropertyAmenity::where('property_id', $property->id)->where('amenity_id', $facility->id)->first();
-                    if ($facCheck) {
-                    } else {
+                    $facCheck = PropertyAmenity::where('property_id',$property->id)->where('amenity_id',$facility->id)->first();
+                    if($facCheck){}else{
                         $propertyAmn = new PropertyAmenity;
-                        $propertyAmn->property_id = $property->id;
+                        $propertyAmn->property_id= $property->id;
                         $propertyAmn->amenity_id  = $facility->id;
                         $propertyAmn->save();
                     }
                 }
             }
         }
-        echo "Property added successfully.";
+        echo "Property add successfully.";
     }
-    public function addxmlMainImg()
-    {
-        ini_set('max_execution_time', 6000);
-        set_time_limit(6000);
-        $apiURL     = 'https://manda.propertybase.com/api/v2/feed/00D4J000000qB4kUAE/XML2U/a0L4J0000008Hk4UAE/full';
-
-        $xml_arr  = simplexml_load_file($apiURL, 'SimpleXMLElement', LIBXML_NOCDATA);
-
-        $xml_arr  = json_decode(json_encode($xml_arr, true), true);
-        foreach ($xml_arr['listing'] as $key => $value) {
-
-            $allraedy               = Property::where('reference_number', $value['id'])->first();
-
-
-            $property = $allraedy ? $allraedy : new Property;
-
-            $img = array_key_exists("listing_media", $value) ? (!empty($value['listing_media']['images']) ? $value['listing_media']['images']['image']['0']['url'] : '') : '';
-            if ($allraedy) {
-                $property->clearMediaCollection('mainImages');
-            }
-           try {
-            $property->addMediaFromUrl($img)->toMediaCollection('mainImages', 'propertyFiles');
-           } catch (\Throwable $th) {
-            //throw $th;
-           }
-
-
-        }
-        echo "Property Image added successfully.";
-    }
-    public function addxmlSubImg()
-    {
-       // XMLSubImageJob::dispatch();
-
-        ini_set('max_execution_time', 6000);
-        set_time_limit(6000);
-        $apiURL     = 'https://manda.propertybase.com/api/v2/feed/00D4J000000qB4kUAE/XML2U/a0L4J0000008Hk4UAE/full';
-
-        $xml_arr  = simplexml_load_file($apiURL, 'SimpleXMLElement', LIBXML_NOCDATA);
-
-        $xml_arr  = json_decode(json_encode($xml_arr, true), true);
-        foreach ($xml_arr['listing'] as $key => $value) {
-
-            $allraedy               = Property::where('reference_number', $value['id'])->first();
-
-            $property               = $allraedy ? $allraedy : new Property;
-            if ($allraedy) {
-                $property->clearMediaCollection('subImages');
-            }
-
-            if (array_key_exists("listing_media", $value) && (count($value['listing_media']['images']['image']) > 0)) {
-                foreach ($value['listing_media']['images']['image'] as $keys => $img) {
-                    // if(filesize($img['url']) < (128 * 1024)){
-                        if ($keys < 5) {
-                            $property->addMediaFromUrl($img['url'])->toMediaCollection('subImages', 'propertyFiles');
-                        } else {
-                             break;
-                        }
-                    // }
-                }
-            }
-        }
-        echo "Property Sub Images added successfully.";
-    }
-
 }

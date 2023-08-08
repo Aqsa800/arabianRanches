@@ -10,10 +10,6 @@ use Auth;
 
 class CategoryController extends Controller
 {
-    function __construct()
-    {
-    
-    }
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +20,9 @@ class CategoryController extends Controller
         $categories = Category::with('user')
         ->applyFilters($request->only(['status']))
         ->orderBy('id','desc')
-        ->get();
+        ->paginate(5);
 
-        return view('dashboard.realEstate.categories.index', compact('categories'));
+        return view('dashboard.realState.categories.index', compact('categories'));
     }
 
     /**
@@ -36,7 +32,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('dashboard.realEstate.categories.create');
+        return view('dashboard.realState.categories.create');
     }
 
     /**
@@ -79,7 +75,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('dashboard.realEstate.categories.edit',compact('category'));
+        return view('dashboard.realState.categories.edit',compact('category'));
     }
 
     /**

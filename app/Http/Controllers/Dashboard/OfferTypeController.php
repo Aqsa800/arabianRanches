@@ -10,10 +10,6 @@ use Auth;
 
 class OfferTypeController extends Controller
 {
-    function __construct()
-    {
-        
-    }
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +20,8 @@ class OfferTypeController extends Controller
         $offerTypes = OfferType::with('user')
         ->applyFilters($request->only(['status']))
         ->orderBy('id','desc')
-        ->get();
-        return view('dashboard.realEstate.offerTypes.index', compact('offerTypes'));
+        ->paginate(5);
+        return view('dashboard.realState.offerTypes.index', compact('offerTypes'));
     }
 
     /**
@@ -35,7 +31,7 @@ class OfferTypeController extends Controller
      */
     public function create()
     {
-        return view('dashboard.realEstate.offerTypes.create');
+        return view('dashboard.realState.offerTypes.create');
     }
 
     /**
@@ -78,7 +74,7 @@ class OfferTypeController extends Controller
      */
     public function edit(OfferType $offerType)
     {
-        return view('dashboard.realEstate.offerTypes.edit',compact('offerType'));
+        return view('dashboard.realState.offerTypes.edit',compact('offerType'));
     }
 
     /**

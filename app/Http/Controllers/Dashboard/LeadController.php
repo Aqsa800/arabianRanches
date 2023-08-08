@@ -10,10 +10,6 @@ use Auth;
 
 class LeadController extends Controller
 {
-    function __construct()
-    {
-       
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +17,7 @@ class LeadController extends Controller
      */
     public function index()
     {
-        $leads = Lead::orderBy('id','desc')->get();
+        $leads = Lead::orderBy('id','desc')->paginate(5);
 
         return view('dashboard.leadManagement.leads.index', compact('leads'));
     }

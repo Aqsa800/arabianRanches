@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{
-    Article,
     User,
     Property,
-    Testimonial
+    Blog,
+    Team,
+    Lead,
+    Community
 };
-use Auth;
-
 class HomeController extends Controller
 {
     /**
@@ -32,12 +32,18 @@ class HomeController extends Controller
     {
         $activeUserCount = User::active()->where('role','!=', config('constants.super_admin'))->count();
         $activePropertyCount = Property::active()->count();
-        $activeTestimonialCount = Testimonial::active()->count();
+        $activeTeamCount = Team::active()->count();
+        $activeBlogCount = Blog::active()->count();
+        $activeLeadCount = Lead::count();
+        $activeCommunityCount = Community::active()->count();
 
         return view('dashboard.dashboard', compact([
             'activeUserCount',
             'activePropertyCount',
-            'activeTestimonialCount'
+            'activeBlogCount',
+            'activeTeamCount',
+            'activeLeadCount',
+            'activeCommunityCount'
         ]));
     }
 }

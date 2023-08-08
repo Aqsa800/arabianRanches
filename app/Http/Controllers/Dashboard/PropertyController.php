@@ -17,6 +17,7 @@ use App\Models\{
     Feature,
     OfferType,
     Specification,
+    Neighbour,
     Agent,
     PropertyBedroom,
     PropertyDetail,
@@ -27,10 +28,6 @@ use DB;
 
 class PropertyController extends Controller
 {
-    function __construct()
-    {
-
-    }
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +37,7 @@ class PropertyController extends Controller
     {
         $properties = Property::with('user')->latest()->get();
 
-        return view('dashboard.realEstate.properties.index', compact('properties'));
+        return view('dashboard.realState.properties.index', compact('properties'));
     }
 
     /**
@@ -50,17 +47,44 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        $amenities = Amenity::active()->latest()->get();
-        $accommodations = Accommodation::active()->latest()->get();
-        $communities = Community::active()->latest()->get();
-        $offerTypes = OfferType::active()->latest()->get();
-        $currencies = ['AED'];
-        $bedrooms = ['Studio',1,2,3,4,5,6,7,8,9,10,11];
+        $amenities = Amenity::active()->orderBy('id','desc')->get();
+        $accommodations = Accommodation::active()->orderBy('id','desc')->get();
+        $categories = Category::active()->orderBy('id','desc')->get();
+        $completionStatuses = CompletionStatus::active()->orderBy('id','desc')->get();
+        $communities = Community::active()->orderBy('id','desc')->get();
+        $subCommunity = Subcommunity::active()->orderBy('id','desc')->get();
+        $developers = Developer::active()->orderBy('id','desc')->get();
+        $offerTypes = OfferType::active()->orderBy('id','desc')->get();
+        $agents = Agent::active()->orderBy('id','desc')->get();
 
-
-        return view('dashboard.realEstate.properties.create', compact('bedrooms','amenities', 'accommodations', 'communities', 'offerTypes'));
+        return view('dashboard.realState.properties.create', compact('agents','amenities','subCommunity', 'accommodations', 'categories', 'completionStatuses', 'communities', 'developers', 'offerTypes'));
+    }
+    public function createSlug($title)
+    {
+        // Normalize the title
+        $slug = Str::slug($title);
+        // Get any that could possibly be related.
+        // This cuts the queries down by doing it once.
+        $allSlugs = $this->getRelatedSlugs($slug);
+        // If we haven't used it before then we are all good.
+        if (! $allSlugs->contains('slug', $slug)){
+            return $slug;
+        }
+        // Just append numbers like a savage until we find not used.
+        for ($i = 1; $i >= 1; $i++) {
+            $newSlug = $slug.'-'.$i;
+            if (! $allSlugs->contains('slug', $newSlug)) {
+                return $newSlug;
+            }
+        }
+        //throw new \Exception('Can not create a unique slug');
     }
 
+    protected function getRelatedSlugs($slug)
+    {
+        return Property::select('slug')->where('slug', 'like', $slug.'%')->get();
+    }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -71,73 +95,116 @@ class PropertyController extends Controller
     {
         DB::beginTransaction();
         try{
-
             $property = new Property;
             $property->name = $request->name;
             $property->sub_title = $request->sub_title;
             $property->reference_number = $request->reference_number;
+            $property->permit_number = $request->permit_number;
             $property->meta_title = $request->meta_title;
             $property->meta_description = $request->meta_description;
-            $property->meta_keywords = $request->meta_keywords;
+            $property->meta_keyword = $request->meta_keyword;
+            $property->slug = $this->createSlug($request->name);
             $property->description = $request->description;
             $property->bathrooms = $request->bathrooms;
-            $property->bedrooms = $request->bedrooms;
-            $property->area = $request->area;
+            $property->parking = $request->parking_space;
+            $property->unit_model = $request->unit_model;
             $property->price = $request->price;
+            $property->cheques = $request->cheques;
+            $property->cheque_frequency = $request->cheque_frequency;
+            $property->built_area = $request->area;
+            $property->plot_area = $request->plot_area;
+            $property->unit_measure = $request->unit_measure;
             $property->status = $request->status;
-            $property->property_source = 'crm';
-
-            $property->address_longitude = $request->address_longitude;
-            $property->address_latitude = $request->address_latitude;
-            $property->address = $request->address;
-            $property->user_id = Auth::user()->id;
-
-            if($request->has('accommodation_id')){
-                $property->accommodations()->associate($request->accommodation_id);
+            $property->is_feature = $request->is_feature;
+            $property->featured_project = $request->featured_project;
+            $property->exclusive = $request->exclusive;
+            $property->emirate = $request->emirate;
+            
+            if($request->has('communityIds')){
+                $property->communities()->associate($request->communityIds);
+            }
+            
+            if($request->has('sub_community')){
+                $property->subcommunities()->associate($request->sub_community);
+            }
+            
+            if($request->has('agent_id')){
+                $property->agent()->associate($request->agent_id);
             }
 
-            if($request->has('community_id')){
-                $property->communities()->associate($request->community_id);
+            $property->rating = $request->rating;
+            $property->primary_view = $request->primary_view;
+
+            if($request->has('completion_status_id')){
+                $property->completionStatus()->associate($request->completion_status_id);
+            }
+
+            if($request->has('developer_id')){
+                $property->developer()->associate($request->developer_id);
             }
 
             if($request->has('offer_type_id')){
                 $property->offerType()->associate($request->offer_type_id);
             }
-
-            if ($request->hasFile('mainImage')) {
-                $img =  $request->file('mainImage');
-                $ext = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->name).'.'.$ext;
-
-                $property->addMediaFromRequest('mainImage')->usingFileName($imageName)->toMediaCollection('mainImages', 'propertyFiles' );
+            if($request->has('categoryIds')){
+                $property->category()->associate($request->categoryIds);
             }
 
+            $property->property_source = 'crm';
+            
+            $property->address_longitude = $request->address_longitude;
+            $property->address_latitude = $request->address_latitude;
+            $property->address = $request->address;
+            
 
+            $property->user_id = Auth::user()->id;
+
+           
+            
+            
+           
+            
+            if ($request->hasFile('mainImage')) {
+                $property->addMediaFromRequest('mainImage')->toMediaCollection('mainImages');
+            }
             if ($request->hasFile('subImages')) {
-                foreach($request->subImages as $img)
-                {
-                    $property->addMedia($img)->toMediaCollection('subImages', 'propertyFiles');
+                foreach ($request->subImages as $subImage) {
+                    $property->addMedia($subImage)->toMediaCollection('subImages');
                 }
             }
-
+            if ($request->hasFile('floorPlan')) {
+                $property->addMediaFromRequest('floorPlan')->toMediaCollection('floorPlans');
+            }
+            if ($request->hasFile('brochure')) {
+                $property->addMediaFromRequest('brochure')->toMediaCollection('brochures');
+            }
             $property->save();
+
+            if($request->has('bedrooms')){
+                foreach($request->bedrooms as $bedroom){
+                    $property->bedroomss()->create(['bedroom'=>$bedroom]);
+                }
+             }
+           
+             if(isset($request->detailsKey)){
+                foreach($request->detailsKey as $key => $detKey ) {
+                    
+                    if (!empty($detKey)) {
+                        $property->propertyDetails()->attach($detKey, ['value' => $request->detailsName[$key]]);
+                    }
+                 }
+             }
+            if($request->has('accommodationIds')){
+                $property->accommodations()->attach($request->accommodationIds);
+            }
             if($request->has('amenityIds')){
                 $property->amenities()->attach($request->amenityIds);
             }
-
+            
             DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message'=> 'Property has been created successfully.',
-                'redirect' => route('dashboard.properties.index'),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route('dashboard.properties.index'),
-            ]);
+            return redirect()->route('dashboard.properties.index')->with('success','Property has been created successfully.');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.properties.index')->with('error',$error->getMessage());
         }
     }
 
@@ -147,9 +214,9 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Property $property)
     {
-        //
+        return redirect()->route('property', $property->slug);
     }
 
     /**
@@ -160,13 +227,17 @@ class PropertyController extends Controller
      */
     public function edit(Property $property)
     {
-
-        $amenities = Amenity::active()->latest()->get();
-        $accommodations = Accommodation::active()->latest()->get();
-        $communities = Community::active()->latest()->get();
-        $offerTypes = OfferType::active()->latest()->get();
-        $bedrooms = ['Studio',1,2,3,4,5,6,7,8,9,10,11];
-        return view('dashboard.realEstate.properties.edit', compact('bedrooms','property','amenities', 'accommodations',  'communities', 'offerTypes'));
+       
+        $amenities = Amenity::active()->orderBy('id','desc')->get();
+        $accommodations = Accommodation::active()->orderBy('id','desc')->get();
+        $categories = Category::active()->orderBy('id','desc')->get();
+        $completionStatuses = CompletionStatus::active()->orderBy('id','desc')->get();
+        $communities = Community::active()->orderBy('id','desc')->get();
+        $subCommunity = Subcommunity::active()->orderBy('id','desc')->get();
+        $developers = Developer::active()->orderBy('id','desc')->get();
+        $offerTypes = OfferType::active()->orderBy('id','desc')->get();
+        $agents = Agent::active()->orderBy('id','desc')->get();
+        return view('dashboard.realState.properties.edit', compact('agents','property','subCommunity','amenities', 'accommodations', 'categories', 'completionStatuses', 'communities', 'developers', 'offerTypes'));
     }
 
     /**
@@ -181,102 +252,125 @@ class PropertyController extends Controller
 
         DB::beginTransaction();
         try{
+            
             $property->name = $request->name;
             $property->sub_title = $request->sub_title;
             $property->reference_number = $request->reference_number;
+            $property->permit_number = $request->permit_number;
+            $property->slug = $this->createSlug($request->name);
+            $property->description = $request->description;
             $property->meta_title = $request->meta_title;
             $property->meta_description = $request->meta_description;
-            $property->meta_keywords = $request->meta_keywords;
-            $property->description = $request->description;
+            $property->meta_keyword = $request->meta_keyword;
             $property->bathrooms = $request->bathrooms;
-            $property->bedrooms = $request->bedrooms;
-            $property->area = $request->area;
+            $property->parking = $request->parking_space;
+            $property->unit_model = $request->unit_model;
             $property->price = $request->price;
+            $property->cheques = $request->cheques;
+            $property->cheque_frequency = $request->cheque_frequency;
+            $property->built_area = $request->area;
+            $property->plot_area = $request->plot_area;
+            $property->unit_measure = $request->unit_measure;
             $property->status = $request->status;
-            $property->property_source = $request->property_source;
+            $property->is_feature = $request->is_feature;
+            $property->featured_project = $request->featured_project;
+            $property->exclusive = $request->exclusive;
+            $property->emirate = $request->emirate;
 
-            $property->address_longitude = $request->address_longitude;
-            $property->address_latitude = $request->address_latitude;
-            $property->address = $request->address;
-            $property->user_id = Auth::user()->id;
-
-            if($request->has('community_id')){
-                $property->community_id = $request->community_id;
+              
+            if($request->has('communityIds')){
+                $property->communities()->associate($request->communityIds);
             }
-
-            if($request->has('sub_community_id')){
-                $property->subcommunity_id = $request->sub_community_id;
+            if($request->has('sub_community')){
+                $property->subcommunities()->associate($request->sub_community);
             }
-            if($request->has('developer_id')){
-                $property->developer_id = $request->developer_id;
-            }
-
             if($request->has('agent_id')){
-                $property->agent_id = $request->agent_id;
+                $property->agent()->associate($request->agent_id);
             }
 
-
-
+            $property->rating = $request->rating;
+            $property->primary_view = $request->primary_view;
 
             if($request->has('completion_status_id')){
-                $property->completion_status_id = $request->completion_status_id;
+                $property->completionStatus()->associate($request->completion_status_id);
+            }
+
+            if($request->has('developer_id')){
+                $property->developer()->associate($request->developer_id);
             }
 
             if($request->has('offer_type_id')){
-                $property->offer_type_id = $request->offer_type_id;
+                $property->offerType()->associate($request->offer_type_id);
             }
-            if($request->has('category_id')){
-                $property->category_id = $request->category_id;
+            if($request->has('categoryIds')){
+                $property->category()->associate($request->categoryIds);
             }
-            if($request->has('accommodation_id')){
-                $property->accommodation_id = $request->accommodation_id;
-            }
+            
+            $property->address_longitude = $request->address_longitude;
+            $property->address_latitude = $request->address_latitude;
+            $property->address = $request->address;
+            
 
-
+            $property->user_id = Auth::user()->id;
 
             if ($request->hasFile('mainImage')) {
-                $property->clearMediaCollection('mainImage');
-                $img =  $request->file('mainImage');
-                $ext = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->name).'.'.$ext;
-                $property->addMediaFromRequest('mainImage')->usingFileName($imageName)->toMediaCollection('mainImages', 'propertyFiles' );
+                $property->clearMediaCollection('mainImages');
+                $property->addMediaFromRequest('mainImage')->toMediaCollection('mainImages');
             }
-            if ($request->hasFile('qr')) {
-                $property->clearMediaCollection('qrs');
-                $img =  $request->file('qr');
-                $ext = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->name).'_qr.'.$ext;
-
-                $property->addMediaFromRequest('qr')->usingFileName($imageName)->toMediaCollection('qrs', 'propertyFiles' );
-            }
-
             if ($request->hasFile('subImages')) {
-
-                foreach($request->subImages as $img)
-                {
-                    $property->addMedia($img)->toMediaCollection('subImages', 'propertyFiles');
+                $subImages = $request->file('subImages');
+                $property->clearMediaCollection('subImages');
+                foreach ($subImages as $subImage) {
+                    $property->addMedia($subImage)->toMediaCollection('subImages');
                 }
+            }
+            if ($request->hasFile('floorPlan')) {
+                $property->clearMediaCollection('floorPlans');
+                $property->addMediaFromRequest('floorPlan')->toMediaCollection('floorPlans');
+            }
+            if ($request->hasFile('brochure')) {
+                $property->clearMediaCollection('brochures');
+                $property->addMediaFromRequest('brochure')->toMediaCollection('brochures');
             }
 
             $property->save();
+            if($request->has('bedrooms')){
+                $oldBedrooms = $property->bedroomss->toArray();
+                foreach ($oldBedrooms as $oldBedroom) {
+                    PropertyBedroom::destroy($oldBedroom['id']);
+                }
+                foreach($request->bedrooms as $bedroom){
+                    $property->bedroomss()->create(['bedroom'=>$bedroom]);
+                }
+             }
+            if(isset($request->detailsKey)){
+                $oldDets = $property->propertyDetails->toArray();
+                foreach ($oldDets as $oldDet) {
+                    PropertyDetail::destroy($oldDet['id']);
+                }
+                foreach($request->detailsKey as $key => $detKey ) {
+                    
+                    if (!empty($detKey)) {
+                        $property->propertyDetails()->create(['key' => $detKey , 'value' => $request->detailsName[$key]]);
+                    }
+                 }
+             }
 
+            if($request->has('accommodationIds')){
+                $property->accommodations()->detach();
+                $property->accommodations()->attach($request->accommodationIds);
+            }
             if($request->has('amenityIds')){
                 $property->amenities()->detach();
                 $property->amenities()->attach($request->amenityIds);
             }
+           
 
             DB::commit();
-            return response()->json([
-                'success' => true,
-                'message'=> 'Property has been updated successfully.',
-                'redirect' => route('dashboard.properties.index'),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route('dashboard.properties.index'),
-            ]);
+
+            return redirect()->route('dashboard.properties.index')->with('success','Property has been updated successfully.');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.properties.index')->with('error',$error->getMessage());
         }
     }
 
@@ -297,23 +391,30 @@ class PropertyController extends Controller
         }
 
     }
-    public function mediaDestroy(Property $property, $media)
+    public function destroySpec($id)
     {
+        
         try{
-            $property->deleteMedia($media);
-            return redirect()->route('dashboard.properties.edit', $property->id)->with('success','Property Image has been deleted successfully.');
-        }catch(\Exception $error){
-            return redirect()->route('dashboard.properties.edit', $property->id)->with('error',$error->getMessage());
-        }
-    }
-    public function mediasDestroy(Property $property)
-    {
-        try{
-            $property->clearMediaCollection('subImages');
-            return redirect()->route('dashboard.properties.edit', $property->id)->with('success','Property Gallery has been deleted successfully.');
-        }catch(\Exception $error){
-            return redirect()->route('dashboard.properties.edit', $property->id)->with('error',$error->getMessage());
-        }
-    }
+            
+            PropertyDetail::find($id)->delete();
 
+            return redirect()->back()->with('success','Property detail has been deleted successfully');
+        }catch(\Exception $error){
+            return redirect()->back()->with('error',$error->getMessage());
+        }
+
+    }
+    protected function propertyAssets(){
+
+        $amenities = Amenity::active()->orderBy('id','desc')->get();
+        $accommodations = Accommodation::active()->orderBy('id','desc')->get();
+        $categories = Category::active()->orderBy('id','desc')->get();
+        $completionStatuses = CompletionStatus::active()->orderBy('id','desc')->get();
+        $communities = Community::active()->orderBy('id','desc')->get();
+        $developers = Developer::active()->orderBy('id','desc')->get();
+        $features = Feature::active()->orderBy('id','desc')->get();
+        $offerTypes = OfferType::active()->orderBy('id','desc')->get();
+        $specifications = Specification::active()->orderBy('id','desc')->get();
+
+    }
 }

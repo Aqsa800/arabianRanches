@@ -24,11 +24,6 @@
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Profile Setting Form</h3>
-                            @if ($errors->any())
-     @foreach ($errors->all() as $error)
-         <div>{{$error}}</div>
-     @endforeach
- @endif
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -84,36 +79,6 @@
                                             @enderror
                                         </div>
                                     </div>
-
-                                    {{-- <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="logo">Community File</label>
-                                            <div class="custom-file  @error('communityFile') is-invalid @enderror">
-                                                <input type="file" class="custom-file-input" id="communityFile" name="communityFile" accept=".csv">
-                                                <label class="custom-file-label" for="communityFile">Choose file</label>
-                                            </div>
-                                            @error('communityFile')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="blogFile">Blog File</label>
-                                            <div class="custom-file  @error('blogFile') is-invalid @enderror">
-                                                <input type="file" class="custom-file-input" id="blogFile" name="blogFile" accept=".csv">
-                                                <label class="custom-file-label" for="blogFile">Choose file</label>
-                                            </div>
-                                            @error('blogFile')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
                                 </div>
                             </div>
                             <!-- /.card-body -->

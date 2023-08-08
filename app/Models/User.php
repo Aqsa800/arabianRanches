@@ -10,15 +10,12 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Image\Manipulations;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Traits\HasRoles;
 use Carbon\Carbon;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasRoles, HasApiTokens, SoftDeletes, HasFactory, Notifiable, InteractsWithMedia;
+    use HasApiTokens, SoftDeletes, HasFactory, Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -59,14 +56,7 @@ class User extends Authenticatable implements HasMedia
     ];
     public function getImageAttribute()
     {
-        return $this->getFirstMediaUrl('images', 'resize');
-    }
-    public function registerMediaConversions(Media $media = null) : void
-    {
-        $this->addMediaConversion('resize')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('images')
-            ->nonQueued();
+        return $this->getFirstMediaUrl('images');
     }
     public function scopeActive($query)
     {
@@ -74,7 +64,7 @@ class User extends Authenticatable implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function getFormattedCreatedAtAttribute($value)
     {

@@ -24,24 +24,54 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row float-right">
-
+                                <div class="mr-3">
+                                    <button type="button" class="btn btn-block btn-outline-primary" data-toggle="collapse"
+                                        data-target="#collapseFilter" aria-expanded="false"
+                                        aria-controls="collapseFilter">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                        Filter
+                                    </button>
+                                </div>
+                                <div class="">
                                     <a href="{{ route('dashboard.testimonials.create') }}"
                                         class="btn btn-block btn-primary">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                         New Testimonial
                                     </a>
-
+                                </div>
                             </div>
                         </div>
-
+                        <div class="collapse @if(count(request()->all())> 0) show @endif" id="collapseFilter">
+                            <form method="GET" action="{{ route('dashboard.testimonials.index') }}">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control" id="status" name="status">
+                                                @foreach (config('constants.statuses') as $key=>$value)
+                                                <option value="{{ $key }}"
+                                                    @if(request()->status === $key) selected @endif
+                                                >{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search" aria-hidden="true"></i>Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
                         <!-- /.card-header -->
-                        <div class="card-body">
-                            <table class="table table-hover text-nowrap table-striped datatable">
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>SN</th>
-                                        <th>Client Name</th>
-                                        <th>Agent Name</th>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Logo</th>
                                         <th>Status</th>
                                         <th>Added At</th>
                                         <th>Added By</th>
@@ -52,8 +82,15 @@
                                     @foreach ($testimonials as $key => $testimonial)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $testimonial->client_name }}</td>
-                                            <td>{{  $testimonial->agent? $testimonial->agent->name:'' }}</td>
+                                            <td>{{ $testimonial->name }}</td>
+                                            <td>
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <img alt="{{ $testimonial->name }}" class="table-avatar"
+                                                            src="{{ $testimonial->image }}" width="100">
+                                                    </li>
+                                                </ul>
+                                            </td>
                                             <td>
                                                 <span
                                                     class="badge @if ($testimonial->status === 'active') bg-success @else bg-danger @endif">
@@ -82,7 +119,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {!! $testimonials->links() !!}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

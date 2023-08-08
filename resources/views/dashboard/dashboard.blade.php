@@ -1,9 +1,4 @@
 @extends('dashboard.layout.index')
-
-@section('title', '')
-@section('description', '')
-@section('keywords', '')
-
 @section('breadcrumb')
 <div class="content-header">
     <div class="container-fluid">
@@ -26,7 +21,6 @@
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-
             <div class="col-lg-3 col-6">
                 <!-- small box -->
                 <div class="small-box bg-info">
@@ -41,7 +35,6 @@
                     <a href="{{ url('dashboard/users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
@@ -57,23 +50,67 @@
                     <a href="{{ url('dashboard/properties') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ $activeBlogCount }}</h3>
+                        <p>Active Blog</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-file"></i>
+                    </div>
+                    <a href="{{ url('dashboard/blogs') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>{{ $activeTestimonialCount }}</h3>
+                        <h3>{{ $activeTeamCount }}</h3>
 
-                        <p>Active Testimonials</p>
+                        <p>Active Team</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-quote-left"></i>
+                        <i class="fa fa-users"></i>
                     </div>
-                    <a href="{{ url('dashboard/testimonials') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{{ url('dashboard/teams') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+            <!-- ./col -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ $activeLeadCount }}</h3>
 
+                        <p>Leads</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <a href="{{ url('dashboard/leads') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ $activeCommunityCount }}</h3>
+
+                        <p>Communities</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-building"></i>
+                    </div>
+                    <a href="{{ url('dashboard/communities') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
             <!-- ./col -->
         </div>
         <!-- /.row -->

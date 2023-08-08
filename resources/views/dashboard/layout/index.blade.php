@@ -5,11 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title> @yield('title')</title>
-    <meta name="description" content=@yield('description')>
-    <meta name="keywords" content=@yield('keywords')>
-    <link rel="icon" type="image/png" href="@if($favicon) {{  $favicon }} @else {{ asset('frontend/assets/images/favicon.png') }} @endif">
+    <title>Dashboard</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -30,80 +26,27 @@
     <link rel="stylesheet" href="{{ asset('dashboard/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ asset('dashboard/plugins/daterangepicker/daterangepicker.css') }}">
+    
+      <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+
+
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('dashboard/plugins/summernote/summernote-bs4.min.css') }}">
 
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('dashboard/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('dashboard/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('dashboard/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-
     <!-- Select2 -->
-    <link rel="stylesheet" href="{{ asset('dashboard/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('dashboard/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/select2/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('dashboard/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
-
-    @yield('head')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+ <!-- Link Swiper's CSS -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
 </head>
-<style>
-    .select2-container .select2-selection--single {
-        height: calc(2.25rem + 2px) !important;
-    }
-    .image-area {
-        position: relative;
-        width: 50%;
-        background: #333;
-    }
-
-    .image-area img {
-        max-width: 100%;
-        height: auto;
-    }
-    .remove-image {
-        display: none;
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        border-radius: 10em;
-        padding: 2px 6px 3px;
-        text-decoration: none;
-        font: 700 21px/20px sans-serif;
-        background: red;
-        border: 3px solid #fff;
-        color: #FFF;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        -webkit-transition: background 0.5s;
-        transition: background 0.5s;
-    }
-
-    .remove-image:hover {
-        color: white;
-        background: #E54E4E;
-        padding: 3px 7px 5px;
-        top: -11px;
-        right: -11px;
-    }
-
-    .remove-image:active {
-        background: #E54E4E;
-        top: -10px;
-        right: -11px;
-    }
-    .nav-tabs .nav-link {
-        color: white;
-    }
-    .nav-tabs .nav-link {
-        background: #0d6efd;
-    }
-    .nav-tabs .nav-link.active{
-        color: #0d6efd;
-    }
-</style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -165,6 +108,22 @@
     <script src="{{ asset('dashboard/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <!-- Summernote -->
     <script src="{{ asset('dashboard/plugins/summernote/summernote-bs4.min.js') }}"></script>
+    
+     <!-- DataTables  & Plugins -->
+    <script src="{{ asset('dashboard/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/jszip/jszip.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/pdfmake/pdfmake.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/pdfmake/vfs_fonts.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+
+
     <!-- overlayScrollbars -->
     <script src="{{ asset('dashboard/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- AdminLTE App -->
@@ -175,29 +134,17 @@
     <script src="{{ asset('dashboard/dist/js/pages/dashboard.js') }}"></script>
 
 
-    <!-- DataTables  & Plugins -->
-    <script src="{{ asset('dashboard/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-
     <!-- bs-custom-file-input -->
     <script src="{{ asset('dashboard/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 
     <!-- Select2 -->
-    <script src="{{ asset('dashboard/plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('dashboard/plugins/select2/js/select2.full.min.js')}}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -209,19 +156,10 @@
                 toastr.success('{{ Session::get('success') }}');
             @endif
         });
-        
         $(function() {
             bsCustomFileInput.init();
         });
-        $('.select2').select2();
-        $('.select1').select2({
-            allowClear: true
-
-        });
-        $('.search_select').select2({
-            tags: true
-        });
-
+        $('.select2').select2()
         $('.show_confirm').click(function(event) {
             var form = $(this).closest("form");
             var name = $(this).data("name");
@@ -239,25 +177,11 @@
                     }
                 });
         });
-        $('.show_confirm_1').click(function(event) {
-            event.preventDefault();
-            swal({
-                    title: `Are you sure you want to delete this record?`,
-                    text: "If you delete this, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-
-                });
-        });
-
-        $(function() {
-            // Summernote
-            $('#summernote').summernote({
-                imageTitle: {
-                    specificAltField: true,
+        $(function () {
+          // Summernote
+          $('#summernote').summernote({
+             imageTitle: {
+                  specificAltField: true,
                 },
                 popover: {
                     image: [
@@ -269,8 +193,8 @@
                 },
             });
             $('.summernote').summernote({
-                imageTitle: {
-                    specificAltField: true,
+             imageTitle: {
+                  specificAltField: true,
                 },
                 popover: {
                     image: [
@@ -281,135 +205,41 @@
                     ],
                 },
             });
-        })
-        $(function() {
+        });
+        $(function () {
             $(".datatable").DataTable({
                 "ordering": true,
                 "info": true,
                 "searching": true,
                 "responsive": true,
-                "lengthChange": true,
-                "lengthMenu": [10, 25, 50, 75, 100, 150, 200, 250, 500, 1000],
+                "lengthChange": false,
                 "autoWidth": true,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#propertyTable_wrapper .col-md-6:eq(0)');
         });
-
-        $(document).ready(function() {
-
-            var table1 = $('#applicantswithcareer').DataTable( {
-                "ordering": true,
-                "info": true,
-                "searching": true,
-                "responsive": true,
-                "lengthChange": true,
-                "lengthMenu": [10, 25, 50, 75, 100, 150, 200, 250, 500, 1000],
-                "autoWidth": true,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-                } );
-
-            var table2 = $('#applicantswithoutcareer').DataTable( {
-                "ordering": true,
-                "info": true,
-                "searching": true,
-                "responsive": true,
-                "lengthChange": true,
-                "lengthMenu": [10, 25, 50, 75, 100, 150, 200, 250, 500, 1000],
-                "autoWidth": true,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            } );
-
-            var table3 = $('#allapplicants').DataTable( {
-                "ordering": true,
-                "info": true,
-                "searching": true,
-                "responsive": true,
-                "lengthChange": true,
-                "lengthMenu": [10, 25, 50, 75, 100, 150, 200, 250, 500, 1000],
-                "autoWidth": true,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            } );
-            $('#cronTable').DataTable({
-                order: [[1, 'asc']],
-            });
-
-            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (event) {
-                
-                var tabID = $(event.target).attr('data-bs-target');
-                if ( tabID === '#career' ) {
-                    table1.columns.adjust().responsive.recalc();
-                }if ( tabID == '#withoutcareer' ) {
-                    console.log('lll')
-                    table2.columns.adjust().responsive.recalc();
-                }if ( tabID === '#all' ) {
-                    table3.columns.adjust().responsive.recalc();
-                }
-            } );
-
-        } );
-
-        $("#storeForm").submit(function(e) {
-            e.preventDefault();
-            var isValidElements = document.querySelectorAll('.is-invalid');
-            isValidElements.forEach((element) => {
-                element.classList.remove('is-invalid');
-            });
-            var invalidFeedElements = document.querySelectorAll('.invalid-feedback');
-            invalidFeedElements.forEach(box => {
-                box.remove();
-            });
-            var formData = new FormData($("#storeForm")[0]);
-            $.ajax({
-                beforeSend: function() {
-                    $(this).attr('disabled', true);
-                },
-                url: e.target.action,
-                data: formData,
-                type: 'POST',
-                processData: false,
-
-                contentType: false,
-                success: function(response) {
-                    if(response.success == true){
-                        toastr.success(response.message, 'Success');
-                        setTimeout(function() {
-                            location.href = response.redirect
-                        }, 800);
-                        
-                    }else{
-                        toastr.error(response.message);
-                    }
-                },
-                complete: function() {
-                    
-                    $(this).attr('disabled', false);
-                    
-                },
-                error: function(response) {
-                    
-                    if(response.status == 500 ){
-                        toastr.error(response.responseJSON.message);
-                    } else if(response.status == 422){
-                        toastr.error('Fill the Mandatory fields');
-                        $.each(response.responseJSON.errors,function(field_name,error){
-                            if(field_name.includes(".")){
-                                new_field_name = field_name.split(".")[0];
-                                console.log(new_field_name);
-                                $(document).find('[id='+new_field_name+']').addClass('is-invalid')
-                                $(document).find('[id='+new_field_name+']').after('<span class="invalid-feedback" role="alert"><strong>' +error+ '</strong></span>')
-                            }
-                            $(document).find('[name='+field_name+']').addClass('is-invalid')
-                            $(document).find('[name='+field_name+']').after('<span class="invalid-feedback" role="alert"><strong>' +error+ '</strong></span>')
-                        })
-                    }else{
-                        toastr.error(response);
-                    }
-                }
-            });
-        });
     </script>
-
-    @yield('js')
+    <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 1,
+      spaceBetween: 10,
+     
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 10,
+        },
+        768: {
+          slidesPerView: 5,
+          spaceBetween: 10,
+        },
+        1024: {
+          slidesPerView: 6,
+          spaceBetween: 10,
+        },
+      },
+    });
+  </script>
 </body>
 
 </html>

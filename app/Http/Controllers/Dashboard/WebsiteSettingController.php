@@ -8,10 +8,6 @@ use App\Models\WebsiteSetting;
 
 class WebsiteSettingController extends Controller
 {
-    function __construct()
-    {
-
-    }
     public function getSmsBulk()
     {
         $bulk_sms_api_key = WebsiteSetting::getSetting('bulk_sms_api_key')? WebsiteSetting::getSetting('bulk_sms_api_key') : '';
@@ -49,32 +45,30 @@ class WebsiteSettingController extends Controller
     {
         $email = WebsiteSetting::getSetting('email')? WebsiteSetting::getSetting('email') : '';
         $contact_number = WebsiteSetting::getSetting('contact_number')? WebsiteSetting::getSetting('contact_number') : '';
-        $telephone_number = WebsiteSetting::getSetting('telephone_number')? WebsiteSetting::getSetting('telephone_number') : '';
-        $tollfree_number = WebsiteSetting::getSetting('tollfree_number')? WebsiteSetting::getSetting('tollfree_number') : '';
+        $address = WebsiteSetting::getSetting('address')? WebsiteSetting::getSetting('address') : '';
         $whatsapp = WebsiteSetting::getSetting('whatsapp')? WebsiteSetting::getSetting('whatsapp') : '';
-        $whatsapp_number = WebsiteSetting::getSetting('whatsapp_number')? WebsiteSetting::getSetting('whatsapp_number') : '';
         $facebook = WebsiteSetting::getSetting('facebook')? WebsiteSetting::getSetting('facebook') : '';
         $twitter = WebsiteSetting::getSetting('twitter')? WebsiteSetting::getSetting('twitter') : '';
         $linkedin = WebsiteSetting::getSetting('linkedin')? WebsiteSetting::getSetting('linkedin') : '';
         $instagram = WebsiteSetting::getSetting('instagram')? WebsiteSetting::getSetting('instagram') : '';
         $youtube = WebsiteSetting::getSetting('youtube')? WebsiteSetting::getSetting('youtube') : '';
-        $tiktok = WebsiteSetting::getSetting('tiktok')? WebsiteSetting::getSetting('tiktok') : '';
-
+        $location = WebsiteSetting::getSetting('location')? WebsiteSetting::getSetting('location') : '';
+        $address_latitude = WebsiteSetting::getSetting('address_latitude')? WebsiteSetting::getSetting('address_latitude') : '';
+        $address_longitude = WebsiteSetting::getSetting('address_longitude')? WebsiteSetting::getSetting('address_longitude') : '';
 
         return view('dashboard.websiteSettings.socialInfo', compact([
             'email',
             'contact_number',
-            'telephone_number',
-            'tollfree_number',
-            'whatsapp_number',
+            'address',
             'whatsapp',
             'facebook',
             'twitter',
             'linkedin',
             'instagram',
             'youtube',
-            'tiktok',
-
+            'location',
+            'address_latitude',
+            'address_longitude'
         ]));
     }
     public function updateSocialInfo(Request $request)
@@ -87,25 +81,11 @@ class WebsiteSettingController extends Controller
         $website_name = WebsiteSetting::getSetting('website_name')? WebsiteSetting::getSetting('website_name') : '';
         $slogan = WebsiteSetting::getSetting('slogan')? WebsiteSetting::getSetting('slogan') : '';
         $website_url = WebsiteSetting::getSetting('website_url')? WebsiteSetting::getSetting('website_url') : '';
-        $location = WebsiteSetting::getSetting('location')? WebsiteSetting::getSetting('location') : '';
-        $address = WebsiteSetting::getSetting('address')? WebsiteSetting::getSetting('address') : '';
-        $website_keyword = WebsiteSetting::getSetting('website_keyword')? WebsiteSetting::getSetting('website_keyword') : '';
-        $copyright_description = WebsiteSetting::getSetting('copyright_description')? WebsiteSetting::getSetting('copyright_description') : '';
-        $website_description = WebsiteSetting::getSetting('website_description')? WebsiteSetting::getSetting('website_description') : '';
-        $address_latitude = WebsiteSetting::getSetting('address_latitude')? WebsiteSetting::getSetting('address_latitude') : '';
-        $address_longitude = WebsiteSetting::getSetting('address_longitude')? WebsiteSetting::getSetting('address_longitude') : '';
 
         return view('dashboard.websiteSettings.basicInfo', compact([
             'website_name',
             'slogan',
-            'address',
-            'website_url',
-            'website_description',
-            'website_keyword',
-            'copyright_description',
-            'location',
-            'address_latitude',
-            'address_longitude'
+            'website_url'
         ]));
     }
     public function updateBasicInfo(Request $request)
@@ -131,7 +111,8 @@ class WebsiteSettingController extends Controller
                     $value = WebsiteSetting::getFavicon();
                 }
                 if ($request->hasFile('footer_logo')) {
-                      $setting->clearMediaCollection('footer_logos');
+                    //   $setting->clearMediaCollection('footer_logos');
+                    
                     $setting->addMediaFromRequest('footer_logo')->toMediaCollection('footer_logos');
                     $value = WebsiteSetting::getFooterLogo();
                 }

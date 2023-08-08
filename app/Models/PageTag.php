@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
 
-class PageTag extends Model implements HasMedia
+class PageTag extends Model
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, SoftDeletes;
 
     /**
      * The dates attributes
@@ -30,7 +27,6 @@ class PageTag extends Model implements HasMedia
      * @var array
      */
     protected $appends = [
-        'bannerImage',
         'formattedCreatedAt'
     ];
     /**
@@ -42,10 +38,6 @@ class PageTag extends Model implements HasMedia
     public function getFormattedCreatedAtAttribute($value)
     {
         return Carbon::parse($this->created_at)->format('d m Y');
-    }
-    public function getBannerImageAttribute()
-    {
-        return $this->getFirstMediaUrl('banners');
     }
     /**
      * FIND Relationship
@@ -67,7 +59,7 @@ class PageTag extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

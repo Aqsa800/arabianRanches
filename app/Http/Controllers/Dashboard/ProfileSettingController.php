@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Dashboard\{ProfileSettingRequest};
 use App\Models\User;
 use Auth;
-use  App\Imports\{
-    CommunityImport,
-    ArticleImport
-};
-use Excel;
 
 class ProfileSettingController extends Controller
 {
@@ -31,14 +26,6 @@ class ProfileSettingController extends Controller
             $user->clearMediaCollection('images');
             $user->addMediaFromRequest('image')->toMediaCollection('images');
         }
-        // if($request->hasFile('communityFile')){
-        //     $file = $request->communityFile;
-        //     Excel::import(new CommunityImport,$file);
-        // }
-        // if($request->hasFile('blogFile')){
-        //     $file = $request->blogFile;
-        //     Excel::import(new ArticleImport,$file);
-        // }
         return redirect()->route('dashboard.profileSettings')->with('success','Profile has been updated successfully.');
     }
 }

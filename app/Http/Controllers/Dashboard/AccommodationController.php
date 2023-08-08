@@ -10,10 +10,6 @@ use Auth;
 
 class AccommodationController extends Controller
 {
-    function __construct()
-    {
-        
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,12 +17,13 @@ class AccommodationController extends Controller
      */
     public function index(Request $request)
     {
+
         $accommodations = Accommodation::with('user')
         ->applyFilters($request->only(['status']))
         ->orderBy('id','desc')
-        ->get();
+        ->paginate(5);
 
-        return view('dashboard.realEstate.accommodations.index', compact('accommodations'));
+        return view('dashboard.realState.accommodations.index', compact('accommodations'));
     }
 
     /**
@@ -36,7 +33,7 @@ class AccommodationController extends Controller
      */
     public function create()
     {
-        return view('dashboard.realEstate.accommodations.create');
+        return view('dashboard.realState.accommodations.create');
     }
 
     /**
@@ -56,18 +53,11 @@ class AccommodationController extends Controller
             $accommodation->addMediaFromRequest('image')->toMediaCollection('images');
             }
             $accommodation->save();
-            return response()->json([
-                'success' => true,
-                'message'=> 'Accommodation has been created successfully.',
-                'redirect' => route('dashboard.accommodations.index'),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route('dashboard.accommodations.index'),
-            ]);
+            return redirect()->route('dashboard.accommodations.index')->with('success','Accommodation has been created successfully.');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.accommodations.index')->with('error',$error->getMessage());
         }
+
     }
 
     /**
@@ -89,7 +79,7 @@ class AccommodationController extends Controller
      */
     public function edit(Accommodation $accommodation)
     {
-        return view('dashboard.realEstate.accommodations.edit',compact('accommodation'));
+        return view('dashboard.realState.accommodations.edit',compact('accommodation'));
     }
 
     /**
@@ -110,18 +100,12 @@ class AccommodationController extends Controller
             }
             $accommodation->save();
 
-            return response()->json([
-                'success' => true,
-                'message'=> 'Accommodation has been updated successfully.',
-                'redirect' => route('dashboard.accommodations.index'),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route('dashboard.accommodations.index'),
-            ]);
+            return redirect()->route('dashboard.accommodations.index')->with('success','Accommodation has been updated successfully');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.accommodations.index')->with('error',$error->getMessage());
         }
+
+
     }
 
     /**

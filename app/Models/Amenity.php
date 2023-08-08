@@ -4,18 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Image\Manipulations;
 use Carbon\Carbon;
 
 class Amenity extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes, InteractsWithMedia;
-
     /**
      * The dates attributes
      *
@@ -43,19 +40,11 @@ class Amenity extends Model implements HasMedia
      */
     public function getImageAttribute()
     {
-        return $this->getFirstMediaUrl('images','resize');
+        return $this->getFirstMediaUrl('images');
     }
     public function getFormattedCreatedAtAttribute($value)
     {
         return Carbon::parse($this->created_at)->format('d m Y');
-    }
-    public function registerMediaConversions(Media $media = null) : void
-    {
-        $this->addMediaConversion('resize')
-            ->height(60)
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('images')
-            ->nonQueued();
     }
     /**
      * FIND Relationship
@@ -68,7 +57,6 @@ class Amenity extends Model implements HasMedia
     {
         return $this->belongsToMany(Property::class, 'property_amenities', 'amenity_id', 'property_id');
     }
-
     /**
     * FIND local scope
     */
@@ -78,7 +66,7 @@ class Amenity extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

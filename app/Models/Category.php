@@ -53,14 +53,10 @@ class Category extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
-    public function categories()
+    public function properties()
     {
-        return $this->belongsToMany(Community::class, 'community_categories', 'category_id', 'community_id');
+        return $this->belongsToMany(Property::class, 'property_categories', 'category_id', 'property_id',);
     }
-    // public function properties()
-    // {
-    //     return $this->belongsToMany(Property::class, 'property_categories', 'category_id', 'property_id',);
-    // }
     /**
     * FIND local scope
     */
@@ -70,7 +66,7 @@ class Category extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

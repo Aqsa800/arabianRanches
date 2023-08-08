@@ -10,10 +10,6 @@ use Auth;
 
 class CompletionStatusController extends Controller
 {
-    function __construct()
-    {
-
-    }
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +20,8 @@ class CompletionStatusController extends Controller
         $statuses = CompletionStatus::with('user')
         ->applyFilters($request->only(['status']))
         ->orderBy('id','desc')
-        ->get();
-        return view('dashboard.realEstate.completionStatuses.index', compact('statuses'));
+        ->paginate(5);
+        return view('dashboard.realState.completionStatuses.index', compact('statuses'));
     }
 
     /**
@@ -35,7 +31,7 @@ class CompletionStatusController extends Controller
      */
     public function create()
     {
-        return view('dashboard.realEstate.completionStatuses.create');
+        return view('dashboard.realState.completionStatuses.create');
     }
 
     /**
@@ -78,7 +74,7 @@ class CompletionStatusController extends Controller
      */
     public function edit(CompletionStatus $completionStatus)
     {
-        return view('dashboard.realEstate.completionStatuses.edit',compact('completionStatus'));
+        return view('dashboard.realState.completionStatuses.edit',compact('completionStatus'));
     }
 
     /**

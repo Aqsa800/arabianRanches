@@ -1,0 +1,146 @@
+@extends('dashboard.layout.index')
+@section('breadcrumb')
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Agents</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('dashboard/agents') }}">Agents</a></li>
+                        <li class="breadcrumb-item active">Edit Agent</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+@endsection
+@section('content')
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Edit Agent Form</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form class="form-boder" files="true" method="POST" enctype="multipart/form-data"
+                            action="{{ route('dashboard.agents.update', $agent->id) }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" value="{{ $agent->name }}"
+                                                class="form-control @error('name') is-invalid @enderror" id="name"
+                                                placeholder="Enter Name" name="name">
+                                            @error('name')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control @error('status') is-invalid @enderror" id="status"
+                                                name="status">
+                                                @foreach (config('constants.statuses') as $key=>$value)
+                                                <option value="{{ $key }}" @if ($agent->status === $key) selected @endif>{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('status')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" value="{{ $agent->email }}"
+                                                class="form-control @error('name') is-invalid @enderror" id="email"
+                                                placeholder="Enter Email" name="email">
+                                            @error('email')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="contact_number">Contact Number</label>
+                                            <input type="text" value="{{ $agent->contact_number }}"
+                                                class="form-control @error('name') is-invalid @enderror" id="contact_number"
+                                                placeholder="Enter Contact Number" name="contact_number">
+                                            @error('contact_number')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="logo">Image</label>
+                                            <div class="custom-file   @error('image') is-invalid @enderror">
+                                                <input type="file" class="custom-file-input" id="image" name="image"
+                                                    accept=".png, .jpg, .jpeg">
+                                                <label class="custom-file-label" for="image">Choose file</label>
+                                            </div>
+                                            @error('image')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="name">License Number</label>
+                                            <input type="text" value="{{ $agent->license_number }}"
+                                                class="form-control @error('license_number') is-invalid @enderror" id="license_number"
+                                                placeholder="Enter License Number" name="license_number">
+                                            @error('license_number')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="message">Message</label>
+                                            <textarea type="text" class="form-control @error('message') is-invalid @enderror" id="summernote" placeholder="Enter Name" name="message">{{ $agent->message }}</textarea>
+                                            @error('message')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

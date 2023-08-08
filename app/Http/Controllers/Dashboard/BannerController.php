@@ -4,25 +4,27 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\BannerRequest;
-use App\Models\Banner;
+use App\Models\Banners;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use DB;
 
 class BannerController extends Controller
 {
-    function __construct()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
-        $this->middleware('permission:'.config('constants.Permissions.page_contents'),
-        ['only' => ['index','create', 'edit', 'update', 'destroy', ]
-        ]);
+        $banners = Banners::with('user')
+                        ->applyFilters($request->only(['status']))
+                        ->orderBy('id','desc')
+                        ->paginate(5);
+            
+        return view('dashboard.banners.index', compact('banners'));
     }
-    public function index()
-    {
-        return redirect()->route(config('constants.home.route'));
-    }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -30,7 +32,7 @@ class BannerController extends Controller
      */
     public function create()
     {
-        return view('dashboard.pageContents.banners.create');
+        return view('dashboard.banners.create');
     }
 
     /**
@@ -42,42 +44,20 @@ class BannerController extends Controller
     public function store(BannerRequest $request)
     {
         try{
-            $banner = new Banner;
-            $banner->page_name = config('constants.Home');
+            $banner = new Banners;
+            $banner->heading_one = $request->name;
             $banner->status = $request->status;
-            $banner->title = $request->title;
-            $banner->button_text = $request->button_text;
-            $banner->button_link = $request->button_link;
+            $banner->page_url = $request->page_url;
             $banner->user_id = Auth::user()->id;
-
             if ($request->hasFile('image')) {
-                $img =  $request->file('image');
-                $ext = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->title).'.'.$ext;
-                $banner->addMediaFromRequest('image')->usingFileName($imageName)->toMediaCollection('images', 'bannerFiles');
-            }
-
-            if ($request->hasFile('video')) {
-                $img =  $request->file('video');
-                $imgExt = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->title).'.'.$imgExt;
-                $banner->addMediaFromRequest('video')->usingFileName($imageName)->toMediaCollection('videos', 'bannerFiles');
-
+                $banner->addMediaFromRequest('image')->toMediaCollection('images');
             }
             $banner->save();
+            return redirect()->route('dashboard.banners.index')->with('success','Banner has been created successfully.');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.banners.index')->with('error',$error->getMessage());
+        }
 
-            return response()->json([
-                'success' => true,
-                'message'=> 'Banner has been created successfully.',
-                'redirect' => route(config('constants.home.route')),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route(config('constants.home.route')),
-            ]);
-        }            
     }
 
     /**
@@ -96,9 +76,10 @@ class BannerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Banner $banner)
+    public function edit(Banners $banner)
     {
-        return view('dashboard.pageContents.banners.edit', compact('banner'));
+        
+        return view('dashboard.banners.edit',compact('banner'));
     }
 
     /**
@@ -108,42 +89,23 @@ class BannerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BannerRequest $request, Banner $banner)
+    public function update(BannerRequest $request, Banners $banner)
     {
+        
         try{
+            $banner->heading_one = $request->name;
             $banner->status = $request->status;
-            $banner->title = $request->title;
-            $banner->button_text = $request->button_text;
-            $banner->button_link = $request->button_link;
+            $banner->page_url = $request->page_url;
             $banner->user_id = Auth::user()->id;
             if ($request->hasFile('image')) {
                 $banner->clearMediaCollection('images');
-                $img =  $request->file('image');
-                $ext = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->title).'.'.$ext;
-                $banner->addMediaFromRequest('image')->usingFileName($imageName)->toMediaCollection('images', 'bannerFiles');
-            }
-            if ($request->hasFile('video')) {
-                $img =  $request->file('video');
-                $banner->clearMediaCollection('videos');
-                $imgExt = $img->getClientOriginalExtension();
-                $imageName =  Str::slug($request->title).'.'.$imgExt;
-                $banner->addMediaFromRequest('video')->usingFileName($imageName)->toMediaCollection('videos', 'bannerFiles');
-
+                $banner->addMediaFromRequest('image')->toMediaCollection('images');
             }
             $banner->save();
-            return response()->json([
-                'success' => true,
-                'message'=> 'Banner has been updated successfully.',
-                'redirect' => route(config('constants.home.route')),
-            ]);
-        } catch (\Exception $error) {
-            return response()->json([
-                'success' => false,
-                'message'=> $error->getMessage(),
-                'redirect' => route(config('constants.home.route')),
-            ]);
-        }     
+            return redirect()->route('dashboard.banners.index')->with('success','Banner has been Updated successfully.');
+        }catch(\Exception $error){
+            return redirect()->route('dashboard.banners.index')->with('error',$error->getMessage());
+        }
     }
 
     /**
@@ -152,13 +114,14 @@ class BannerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( Banner $banner)
+    public function destroy($id)
     {
         try{
-            $banner->delete();
-            return redirect()->route(config('constants.home.route'))->with('success','Banner has been deleted successfully');
+            Banners::find($id)->delete();
+
+            return redirect()->route('dashboard.banners.index')->with('success','Banner has been deleted successfully');
         }catch(\Exception $error){
-            return redirect()->route(config('constants.home.route'))->with('error',$error->getMessage());
+            return redirect()->route('dashboard.banners.index')->with('error',$error->getMessage());
         }
     }
 }

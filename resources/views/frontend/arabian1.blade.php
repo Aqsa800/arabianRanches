@@ -8,13 +8,17 @@
     @section('pageDescription', $website_description)
     @section('pageKeyword', $website_keyword)
 @endif
-@section('headerClass', '')
-@section('headerId', 'arabianRanches1Header')
+
 @section('header')
-    <div class="headerContent">
-        <h2 class="headerTitle text-uppercase">Arabian Ranches I</h2>
-        <a href="#" class="fillBtn minWdLg  centerAuto mb-5">DOWNLOAD BROCHURE</a>
-    </div>
+    <header class="header overlayClr"  id="arabianRanches1Header">
+        <div class="container">
+            @include('frontend.layout.nav')
+            <div class="headerContent">
+                <h2 class="headerTitle text-uppercase">Arabian Ranches I</h2>
+                <a href="#" class="fillBtn minWdLg  centerAuto mb-5">DOWNLOAD BROCHURE</a>
+            </div>
+        </div>
+    </header>
 @endsection
 @section('header_extra')
 @endsection

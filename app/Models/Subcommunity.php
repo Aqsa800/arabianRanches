@@ -63,10 +63,6 @@ class Subcommunity extends Model implements HasMedia
     {
         return $this->belongsTo(Community::class, 'community_id', 'id');
     }
-    public function floorplans()
-    {
-        return $this->hasMany(FloorPlan::class, 'sub_community_id', 'id');
-    }
     /**
     * FIND local scope
     */
@@ -76,7 +72,7 @@ class Subcommunity extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {

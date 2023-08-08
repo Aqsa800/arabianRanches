@@ -94,7 +94,7 @@
                                             <label for="logo">Image</label>
                                             <div class="custom-file   @error('image') is-invalid @enderror">
                                                 <input type="file" class="custom-file-input" id="image" name="image"
-                                                    accept=".png, .jpg, .jpeg">
+                                                    accept=".png, .jpg, .jpeg, .webp">
                                                 <label class="custom-file-label" for="image">Choose file</label>
                                             </div>
                                             @if($team->image)
@@ -120,11 +120,54 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label for="message">Message</label>
-                                            <textarea type="text" class="form-control @error('message') is-invalid @enderror" id="summernote" placeholder="Enter Name" name="message">{{ $team->message }}</textarea>
-                                            @error('message')
+                                            <label for="name">Category</label>
+                                            <select class="form-control @error('category') is-invalid @enderror"
+                                                id="category" name="category" required>
+                                                <option value="" >Choose Category</option>
+                                                <option value="Leader" @if ($team->category === "Leader") selected @endif>Leader</option>
+                                                <option value="Key" @if ($team->category === "Key") selected @endif>Key Personal</option>
+                                                <option value="Admin" @if ($team->category === "Admin") selected @endif>Admin</option>
+                                            </select>
+                                            @error('category')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="name">Broker No.</label>
+                                            <input type="text" value="{{ $team->rera_no }}"
+                                                class="form-control @error('rera_no') is-invalid @enderror"
+                                                id="rera_no" placeholder="Enter Broker No." name="rera_no">
+                                            @error('rera_no')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="name">Team Order</label>
+                                            <input type="number" value="{{ $team->team_order }}"
+                                                class="form-control @error('team_order') is-invalid @enderror"
+                                                id="team_order" placeholder="Enter Order" name="team_order" required>
+                                            @error('team_order')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea id="description" class="summernote form-control @error('description') is-invalid @enderror" name="description">{{ $team->description }}</textarea>
+                                            @error('description')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -137,6 +180,7 @@
 
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
+                                <a href="{{url('dashboard/teams')}}" class="btn btn-primary">Back</a>
                             </div>
                         </form>
                     </div>

@@ -24,25 +24,56 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row float-right">
-
+                                <div class="mr-3">
+                                    <button type="button" class="btn btn-block btn-outline-primary" data-toggle="collapse"
+                                        data-target="#collapseFilter" aria-expanded="false"
+                                        aria-controls="collapseFilter">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                        Filter
+                                    </button>
+                                </div>
+                                <div class="">
                                     <a href="{{ route('dashboard.page-tags.create') }}" class="btn btn-block btn-primary">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                         New Page Tag
                                     </a>
-
+                                </div>
                             </div>
                         </div>
-
+                        <div class="collapse @if(count(request()->all())> 0) show @endif" id="collapseFilter">
+                            <form method="GET" action="{{ route('dashboard.page-tags.index') }}">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control" id="status" name="status">
+                                                @foreach (config('constants.statuses') as $key=>$value)
+                                                <option value="{{ $key }}"
+                                                    @if(request()->status === $key) selected @endif
+                                                >{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search" aria-hidden="true"></i>Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
                         <!-- /.card-header -->
-                        <div class="card-body ">
-                            <table class="table table-hover text-nowrap table-striped datatable">
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
+                                        <th>URL</th>
                                         <th>Status</th>
-                                        <th>Added By</th>
                                         <th>Added At</th>
+                                        <th>Added By</th>
                                         <th class="text-right">Action</th>
                                     </tr>
                                 </thead>
@@ -51,6 +82,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $tag->page_name }}</td>
+                                            <td>{{ $tag->page_url }}</td>
                                             <td>
                                                 <span class="badge @if ($tag->status === 'active') bg-success @else bg-danger @endif">
                                                     {{ $tag->status }}
@@ -77,7 +109,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {!! $tags->links() !!}
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

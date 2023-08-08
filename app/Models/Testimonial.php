@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Image\Manipulations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
@@ -44,13 +42,6 @@ class Testimonial extends Model implements HasMedia
     {
         return $this->getFirstMediaUrl('images');
     }
-    public function registerMediaConversions(Media $media = null) : void
-    {
-        $this->addMediaConversion('resize')
-            ->format(Manipulations::FORMAT_WEBP)
-            ->performOnCollections('images')
-            ->nonQueued();
-    }
     public function getFormattedCreatedAtAttribute($value)
     {
         return Carbon::parse($this->created_at)->format('d m Y');
@@ -62,10 +53,6 @@ class Testimonial extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
-    public function agent()
-    {
-        return $this->belongsTo(Agent::class);
-    }
     /**
      * FIND local scope
      */
@@ -75,7 +62,7 @@ class Testimonial extends Model implements HasMedia
     }
     public function scopeDeactive($query)
     {
-        return $query->where('status',  config('constants.Inactive'));
+        return $query->where('status',  config('constants.deactive'));
     }
     public function scopeStatus($query, $status)
     {
